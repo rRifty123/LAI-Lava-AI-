@@ -2,425 +2,695 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>LAI - Magma AI Suite</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts for custom typography -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  
   <style>
-    :root {
-      --bg-obsidian: #120c0a;
-      --bg-dark-crust: #1c1411;
-      --bg-vent: #2a1d18;
-      --magma-glow: #ff4500;
-      --magma-bright: #ff6a00;
-      --magma-gold: #ffaa00;
-      --text-light: #f5f0ed;
-      --text-muted: #a6958e;
-      --ash-border: #3d2b23;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
-
     body {
-      background-color: var(--bg-obsidian);
-      color: var(--text-light);
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #0d0806;
+      color: #f7ede8;
     }
 
-    /* Header */
-    header {
-      background: linear-gradient(135deg, var(--bg-dark-crust) 0%, #000 100%);
-      border-bottom: 2px solid var(--magma-glow);
-      box-shadow: 0 0 20px rgba(255, 69, 0, 0.2);
-      padding: 15px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      z-index: 10;
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #140d0a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #4a2f24;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #ff5500;
     }
 
-    .logo-container {
-      display: flex;
-      align-items: center;
-      gap: 12px;
+    /* Obsidian glow transitions */
+    .magma-shadow {
+      box-shadow: 0 0 20px rgba(255, 68, 0, 0.15);
+    }
+    
+    .magma-border-glow:focus-within {
+      border-color: #ff5500;
+      box-shadow: 0 0 15px rgba(255, 68, 0, 0.35);
     }
 
-    .logo-icon {
-      width: 32px;
-      height: 32px;
-      background: radial-gradient(circle, var(--magma-gold) 0%, var(--magma-glow) 70%);
-      border-radius: 50%;
-      box-shadow: 0 0 12px var(--magma-bright);
-      animation: pulse 2s infinite alternate;
+    /* Volcano Animation Keyframes */
+    @keyframes rumble {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      20% { transform: translate(-1px, 1px) rotate(-0.5deg); }
+      40% { transform: translate(-1px, -1px) rotate(0.5deg); }
+      60% { transform: translate(1px, 1px) rotate(0deg); }
+      80% { transform: translate(-1px, 1px) rotate(0.5deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
     }
 
-    .logo-text {
-      font-size: 24px;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      background: linear-gradient(to right, var(--text-light), var(--magma-bright));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+    @keyframes erupt-smoke {
+      0% { transform: translateY(0) scale(0.6); opacity: 0; }
+      20% { opacity: 0.8; }
+      100% { transform: translateY(-45px) scale(1.6); opacity: 0; }
     }
 
-    /* Mode Selection Switch */
-    .mode-selector {
-      display: flex;
-      background-color: var(--bg-obsidian);
-      border: 1px solid var(--ash-border);
-      padding: 4px;
-      border-radius: 30px;
+    @keyframes erupt-lava-left {
+      0% { transform: translate(0, 0) scale(1); opacity: 1; }
+      100% { transform: translate(-30px, -50px) scale(0.4); opacity: 0; }
     }
 
-    .mode-btn {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      padding: 8px 18px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      border-radius: 20px;
-      transition: all 0.3s ease;
+    @keyframes erupt-lava-right {
+      0% { transform: translate(0, 0) scale(1); opacity: 1; }
+      100% { transform: translate(30px, -50px) scale(0.4); opacity: 0; }
     }
 
-    .mode-btn.active {
-      background: linear-gradient(135deg, var(--magma-glow), var(--magma-bright));
-      color: white;
-      box-shadow: 0 0 10px rgba(255, 106, 0, 0.4);
+    @keyframes erupt-lava-center {
+      0% { transform: translate(0, 0) scale(1); opacity: 1; }
+      100% { transform: translate(0px, -65px) scale(0.3); opacity: 0; }
     }
 
-    /* Layout Main Containers */
-    .workspace {
-      display: flex;
-      flex: 1;
-      overflow: hidden;
-      position: relative;
+    @keyframes pulse-magma {
+      0% { fill: #ff3c00; filter: drop-shadow(0 0 2px #ff3c00); }
+      50% { fill: #ffbb00; filter: drop-shadow(0 0 8px #ffbb00); }
+      100% { fill: #ff3c00; filter: drop-shadow(0 0 2px #ff3c00); }
     }
 
-    .chat-panel {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      background-color: var(--bg-dark-crust);
-      height: 100%;
+    /* Animation Classes */
+    .anim-rumble {
+      animation: rumble 0.15s infinite linear;
     }
 
-    /* Preview Panel */
-    .preview-panel {
-      width: 50%;
-      border-left: 2px solid var(--ash-border);
-      background-color: #ffffff;
-      display: none;
-      flex-direction: column;
-      height: 100%;
+    .anim-smoke {
+      animation: erupt-smoke 1.2s infinite ease-out;
+      transform-origin: bottom center;
     }
 
-    .preview-header {
-      background-color: var(--bg-vent);
-      color: var(--text-light);
-      padding: 10px 16px;
-      font-size: 14px;
-      font-weight: 600;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--ash-border);
+    .anim-lava-l {
+      animation: erupt-lava-left 0.8s infinite ease-out;
     }
 
-    .preview-frame {
-      flex: 1;
-      border: none;
-      width: 100%;
-      height: 100%;
-      background-color: #fff;
+    .anim-lava-r {
+      animation: erupt-lava-right 0.8s infinite ease-out;
+      animation-delay: 0.2s;
     }
 
-    /* Messages Stream */
-    .messages-container {
-      flex: 1;
-      padding: 24px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
+    .anim-lava-c {
+      animation: erupt-lava-center 1s infinite ease-out;
+      animation-delay: 0.4s;
     }
 
-    .message {
-      max-width: 80%;
-      padding: 14px 18px;
-      border-radius: 12px;
-      line-height: 1.5;
-      font-size: 15px;
-      word-wrap: break-word;
-    }
-
-    .message.user {
-      align-self: flex-end;
-      background-color: var(--bg-vent);
-      border-right: 4px solid var(--magma-bright);
-      color: var(--text-light);
-    }
-
-    .message.lai {
-      align-self: flex-start;
-      background-color: rgba(61, 43, 35, 0.4);
-      border-left: 4px solid var(--magma-glow);
-      color: var(--text-light);
-    }
-
-    .message pre {
-      background-color: #000;
-      padding: 12px;
-      border-radius: 6px;
-      overflow-x: auto;
-      margin-top: 8px;
-      border: 1px solid var(--ash-border);
-    }
-
-    .message code {
-      font-family: "Courier New", Courier, monospace;
-      color: var(--magma-gold);
-      font-size: 14px;
-    }
-
-    /* Input Area */
-    .input-container {
-      padding: 20px 24px;
-      background-color: var(--bg-obsidian);
-      border-top: 1px solid var(--ash-border);
-    }
-
-    .input-box-wrapper {
-      display: flex;
-      gap: 12px;
-      background-color: var(--bg-vent);
-      border: 1px solid var(--ash-border);
-      border-radius: 8px;
-      padding: 6px 12px;
-      align-items: center;
-      transition: border-color 0.3s ease;
-    }
-
-    .input-box-wrapper:focus-within {
-      border-color: var(--magma-bright);
-      box-shadow: 0 0 8px rgba(255, 106, 0, 0.2);
-    }
-
-    .chat-input {
-      flex: 1;
-      background: none;
-      border: none;
-      color: var(--text-light);
-      font-size: 16px;
-      padding: 10px 4px;
-      outline: none;
-    }
-
-    .chat-input::placeholder {
-      color: var(--text-muted);
-    }
-
-    .send-btn {
-      background: linear-gradient(135deg, var(--magma-glow), var(--magma-bright));
-      border: none;
-      color: white;
-      padding: 10px 20px;
-      font-size: 14px;
-      font-weight: 700;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: transform 0.1s ease, opacity 0.2s ease;
-    }
-
-    .send-btn:hover {
-      opacity: 0.9;
-    }
-
-    .send-btn:active {
-      transform: scale(0.97);
-    }
-
-    @keyframes pulse {
-      0% { box-shadow: 0 0 8px var(--magma-glow); }
-      100% { box-shadow: 0 0 18px var(--magma-bright); }
+    .pulse-magma-core {
+      animation: pulse-magma 1s infinite alternate ease-in-out;
     }
   </style>
 </head>
-<body>
+<body class="h-screen w-screen flex flex-col overflow-hidden relative">
 
-  <header>
-    <div class="logo-container">
-      <div class="logo-icon"></div>
-      <div class="logo-text">LAI</div>
+  <header class="bg-[#140d0a] border-b-2 border-[#ff4400] px-6 py-4 flex items-center justify-between z-20 magma-shadow">
+    <div class="flex items-center gap-3">
+      <!-- Minimalist Glowing Logo Element -->
+      <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-[#ff4400] to-[#ffaa00] shadow-[0_0_15px_#ff4400] animate-pulse"></div>
+      <span class="text-2xl font-extrabold tracking-wider bg-gradient-to-r from-white via-[#f7ede8] to-[#ff5500] bg-clip-text text-transparent">LAI</span>
     </div>
-    
-    <div class="mode-selector">
-      <button id="mode-chat" class="mode-btn active" onclick="setMode('chat')">Normal Chat</button>
-      <button id="mode-app" class="mode-btn" onclick="setMode('app')">App Builder</button>
+
+    <!-- Toggle Controls -->
+    <div class="flex items-center gap-4">
+      <div class="flex items-center gap-2 bg-[#0d0806] p-1 rounded-full border border-[#2d1b14]">
+        <button id="btn-chat" onclick="switchMode('chat')" class="px-5 py-2 text-sm font-bold rounded-full transition-all duration-300 pointer-events-auto bg-gradient-to-r from-[#ff4400] to-[#ff6a00] text-white shadow-lg">
+          Normal Chat
+        </button>
+        <button id="btn-app" onclick="switchMode('app')" class="px-5 py-2 text-sm font-semibold text-[#a69288] hover:text-white rounded-full transition-all duration-300 pointer-events-auto">
+          App Builder
+        </button>
+      </div>
+
+      <!-- Settings Icon - Re-purposed to Open Volcanic Archive / History -->
+      <button onclick="toggleHistoryDrawer()" class="p-2 rounded-lg bg-[#1c110d] hover:bg-[#2d1b14] border border-[#3d231a] transition-all flex items-center gap-2 text-[#ff6a00]" title="Volcanic Archives & Configuration">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+        <span class="text-xs font-bold hidden sm:inline">History</span>
+      </button>
     </div>
   </header>
 
-  <div class="workspace">
-    <!-- AI Conversation Stream -->
-    <div class="chat-panel">
-      <div class="messages-container" id="messages-box">
-        <div class="message lai">
-          Welcome to <strong>LAI</strong>. I'm connected to your volcanic engine. How can I assist you today? Feel free to swap to <strong>App Builder</strong> mode if you want me to write and visually run a project live!
+  <!-- Volcanic Archives & Settings Drawer -->
+  <div id="history-drawer" class="hidden fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex justify-end">
+    <div class="bg-[#140d0a] border-l-2 border-[#ff4400] w-full max-w-md h-full p-6 shadow-2xl flex flex-col justify-between">
+      <div>
+        <div class="flex items-center justify-between mb-6 border-b border-[#2d1b14] pb-4">
+          <h3 class="text-lg font-extrabold text-white flex items-center gap-2">
+            <span class="text-[#ff6a00]">🌋</span> Volcanic Archives
+          </h3>
+          <button onclick="toggleHistoryDrawer()" class="text-[#a69288] hover:text-white font-bold text-lg">✕</button>
         </div>
-      </div>
-      
-      <div class="input-container">
-        <div class="input-box-wrapper">
-          <input type="text" id="user-input" class="chat-input" placeholder="Ask LAI anything..." onkeydown="if(event.key === 'Enter') sendMessage()" />
-          <button class="send-btn" onclick="sendMessage()">Erupt</button>
-        </div>
-      </div>
-    </div>
 
-    <!-- Live App Sandbox Output -->
-    <div class="preview-panel" id="preview-section">
-      <div class="preview-header">
-        <span>Live Workspace Preview</span>
-        <span style="color: var(--magma-gold); font-size: 12px; font-weight: bold;">● Active Sandbox</span>
+        <button onclick="createNewChat()" class="w-full mb-4 py-2 px-4 bg-gradient-to-r from-[#ff4400] to-[#ffaa00] hover:brightness-110 active:scale-95 text-white font-bold text-sm rounded-lg shadow-md transition-all flex items-center justify-center gap-2">
+          <span>＋</span> New Chat Session
+        </button>
+
+        <!-- Past Chats Stream -->
+        <h4 class="text-xs font-bold uppercase tracking-widest text-[#7d675e] mb-3">Saved Conversations</h4>
+        <div id="past-chats-list" class="flex flex-col gap-2 max-h-[350px] overflow-y-auto pr-1">
+          <!-- Active loaded list items go here -->
+        </div>
       </div>
-      <iframe class="preview-frame" id="sandbox-iframe"></iframe>
+
+      <!-- Collapsible API Configuration Area -->
+      <div class="border-t border-[#2d1b14] pt-4 mt-6">
+        <details class="group">
+          <summary class="list-none flex items-center justify-between text-xs font-bold text-[#a69288] cursor-pointer group-open:text-[#ff6a00] transition-colors">
+            <span class="flex items-center gap-2">
+              ⚙️ <span>Configure API Settings</span>
+            </span>
+            <span class="transition-transform group-open:rotate-180">▼</span>
+          </summary>
+          <div class="mt-4 bg-[#0d0806] border border-[#2d1b14] p-3 rounded-lg">
+            <p class="text-[10px] text-[#a69288] mb-3 leading-relaxed">
+              Gemini keys start with <strong class="text-white">AQ.</strong> or <strong class="text-white">AIzaSy</strong>. Update your key below if the default is exhausted or restricted.
+            </p>
+            <div class="flex gap-2">
+              <input 
+                type="password" 
+                id="api-key-input" 
+                class="flex-1 bg-[#140d0a] border border-[#3d231a] rounded px-2.5 py-1.5 text-xs text-[#f7ede8] focus:border-[#ff5500] outline-none font-mono" 
+                placeholder="AQ..."
+              />
+              <button onclick="saveApiKey()" class="bg-[#ff4400] hover:bg-[#ff6a00] text-white px-3 py-1.5 rounded text-xs font-bold transition-all">
+                Save
+              </button>
+            </div>
+          </div>
+        </details>
+      </div>
     </div>
   </div>
 
-  <script>
-    // Hardcoded Gemini Key from user payload
-<script>
-    // Hardcoded Gemini Key from your configuration
-    const API_KEY = "AQ.Ab8RN6ISVRzFI53KlD-9aL9RM5bVQZfczBXyeWGnZxhGdLsvAg";
-    let currentMode = "chat";
+  <!-- Main Workspace -->
+  <main class="flex-1 flex overflow-hidden relative">
+    
+    <!-- Left Section: Chat Box -->
+    <section class="flex-1 flex flex-col bg-[#110a08] h-full relative z-10">
+      
+      <!-- Messages Stream -->
+      <div id="chat-stream" class="flex-1 p-6 overflow-y-auto flex flex-col gap-5">
+        <!-- Messages populate dynamically -->
+      </div>
 
-    function setMode(mode) {
-      currentMode = mode;
-      document.getElementById('mode-chat').classList.toggle('active', mode === 'chat');
-      document.getElementById('mode-app').classList.toggle('active', mode === 'app');
-      
-      const previewPanel = document.getElementById('preview-section');
-      const inputField = document.getElementById('user-input');
-      
-      if (mode === 'app') {
-        previewPanel.style.display = 'flex';
-        inputField.placeholder = "Describe the app you want me to design and render...";
-      } else {
-        previewPanel.style.display = 'none';
-        inputField.placeholder = "Ask LAI anything...";
+      <!-- Live Loading / Volcanic Eruption Indicator -->
+      <div id="erupting-indicator" class="hidden px-6 py-4 bg-[#140d0a] border-t border-[#2d1b14] flex items-center gap-4 transition-all duration-300">
+        <!-- SVG Volcano Eruption Animation -->
+        <div class="w-16 h-16 flex-shrink-0 relative overflow-hidden bg-[#1c110d] rounded-lg border border-[#3d231a] flex items-center justify-center">
+          <svg viewBox="0 0 100 100" class="w-12 h-12">
+            <!-- Background Volcano Base (Rumbles) -->
+            <g class="anim-rumble">
+              <polygon points="20,80 50,35 80,80" fill="#2d1d17" stroke="#1c110d" stroke-width="2" />
+              <!-- Magma in Crater -->
+              <ellipse cx="50" cy="36" rx="8" ry="3" class="pulse-magma-core" />
+              <!-- Lava flowing down side -->
+              <path d="M48,36 Q45,55 35,70" stroke="#ff4400" stroke-width="2.5" fill="none" stroke-linecap="round" />
+              <path d="M52,36 Q55,50 62,65" stroke="#ffaa00" stroke-width="2" fill="none" stroke-linecap="round" />
+            </g>
+            
+            <!-- Erupting Particles / Smoke -->
+            <circle cx="50" cy="30" r="4" fill="#55443d" class="anim-smoke" />
+            <circle cx="48" cy="28" r="5" fill="#3d302b" class="anim-smoke" style="animation-delay: 0.3s;" />
+            <circle cx="52" cy="26" r="3" fill="#6e5a52" class="anim-smoke" style="animation-delay: 0.6s;" />
+            
+            <!-- Lava Sparks -->
+            <circle cx="49" cy="34" r="2" fill="#ff2200" class="anim-lava-l" />
+            <circle cx="51" cy="34" r="2" fill="#ffbb00" class="anim-lava-r" />
+            <circle cx="50" cy="34" r="1.5" fill="#ff7700" class="anim-lava-c" />
+          </svg>
+        </div>
+        <div>
+          <p class="text-sm font-bold text-[#ff6a00] animate-pulse">VOLCANO ERUPTING...</p>
+          <p id="erupting-status-label" class="text-xs text-[#a69288]">LAI is channeling magma core energy for your response...</p>
+        </div>
+      </div>
+
+      <!-- Input Actions -->
+      <div class="p-6 bg-[#0d0806] border-t border-[#25150f] z-10">
+        <div class="flex gap-3 bg-[#170e0a] border border-[#2d1b14] rounded-xl p-2 magma-border-glow transition-all duration-300">
+          <input 
+            type="text" 
+            id="query-input" 
+            class="flex-1 bg-transparent border-none outline-none text-[#f7ede8] placeholder-[#7d675e] px-3 py-2 text-base pointer-events-auto" 
+            placeholder="Ask LAI anything..."
+            onkeydown="if(event.key === 'Enter') handleSend()"
+          />
+          <button 
+            onclick="handleSend()" 
+            class="px-6 py-2.5 bg-gradient-to-r from-[#ff4400] to-[#ff6a00] hover:brightness-110 active:scale-95 text-white font-extrabold rounded-lg tracking-wide shadow-md transition-all pointer-events-auto"
+          >
+            Erupt
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Section: Live Code Frame (App Builder Output) -->
+    <section id="preview-panel" class="hidden w-1/2 h-full bg-white border-l-2 border-[#25150f] flex flex-col relative z-10">
+      <div class="bg-[#140d0a] text-white px-4 py-3 border-b border-[#25150f] flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></div>
+          <span class="text-xs font-bold uppercase tracking-wider text-[#a69288]">Live App Sandbox</span>
+        </div>
+        <button onclick="reloadSandbox()" class="text-xs bg-[#241510] hover:bg-[#382119] border border-[#3d231a] px-2.5 py-1 rounded text-[#ebdcd5] pointer-events-auto">
+          Reset Window
+        </button>
+      </div>
+      <iframe id="sandbox-frame" class="w-full flex-1 border-none bg-white"></iframe>
+    </section>
+
+  </main>
+
+  <script>
+    // Updated to support Google's new secure "AQ." official API Key format
+    const DEFAULT_KEY = "AQ.Ab8RN6LCB-hAHPNb0gwNnXH5ye1iaSVlV9xA36oPNS8QQqygew";
+    
+    // Dynamic Fallback Model Array to secure high availability in high-demand events
+    const FALLBACK_MODELS = [
+      "gemini-3.5-flash",
+      "gemini-3.1-flash-lite",
+      "gemini-2.5-flash"
+    ];
+
+    let activeMode = "chat";
+    let lastGeneratedCode = "";
+    
+    // Manage state of local history sessions
+    let activeChatId = null;
+    let chatHistory = [];
+
+    // Get Active Connection Config
+    function getActiveKey() {
+      const saved = localStorage.getItem('lai_gemini_key');
+      return saved ? saved : DEFAULT_KEY;
+    }
+
+    // Toggle Volcanic Archives Panel
+    function toggleHistoryDrawer() {
+      const drawer = document.getElementById('history-drawer');
+      drawer.classList.toggle('hidden');
+      if (!drawer.classList.contains('hidden')) {
+        renderHistoryList();
+        document.getElementById('api-key-input').value = getActiveKey();
       }
     }
 
-    async function sendMessage() {
-      const inputEl = document.getElementById('user-input');
-      const text = inputEl.value.trim();
-      if (!text) return;
+    // Save customized API config securely
+    function saveApiKey() {
+      const input = document.getElementById('api-key-input').value.trim();
+      if (input) {
+        localStorage.setItem('lai_gemini_key', input);
+      } else {
+        localStorage.removeItem('lai_gemini_key');
+      }
+      appendSystemNotification("🔄 **API update applied.** Using: `" + (input ? input.substring(0,6) + "..." : "New Standard AQ API Channel") + "`");
+    }
 
-      // Render user message
-      appendMessage(text, 'user');
-      inputEl.value = '';
+    // Load entire history context on start
+    function initHistory() {
+      const saved = localStorage.getItem('lai_chat_history');
+      if (saved) {
+        try {
+          chatHistory = JSON.parse(saved);
+        } catch(e) {
+          chatHistory = [];
+        }
+      }
+      
+      if (chatHistory.length === 0) {
+        createNewChat();
+      } else {
+        loadChat(chatHistory[0].id);
+      }
+    }
 
-      // Create LAI loading message placeholder
-      const aiMessageId = appendMessage("Channelling core energy...", 'lai');
+    // Create a pristine conversational instance
+    function createNewChat() {
+      const newId = "chat_" + Date.now();
+      const defaultMsg = {
+        id: "msg_init_" + Date.now(),
+        sender: "lai",
+        text: "🔥 **LAI Magma Core Online**\n\nWelcome back to the suite. Select **App Builder** above if you want me to write and automatically run complete single-file interactive templates!"
+      };
+
+      const newChat = {
+        id: newId,
+        title: "New Volcanic Spark",
+        timestamp: new Date().toLocaleString(),
+        mode: activeMode,
+        messages: [defaultMsg]
+      };
+
+      chatHistory.unshift(newChat);
+      saveHistory();
+      loadChat(newId);
+    }
+
+    // Save state to disk
+    function saveHistory() {
+      localStorage.setItem('lai_chat_history', JSON.stringify(chatHistory));
+    }
+
+    // Load active stream from specific session
+    function loadChat(id) {
+      activeChatId = id;
+      const session = chatHistory.find(c => c.id === id);
+      if (!session) return;
+
+      activeMode = session.mode || 'chat';
+      syncModeUI();
+
+      const stream = document.getElementById('chat-stream');
+      stream.innerHTML = '';
+
+      session.messages.forEach(msg => {
+        appendMessageToDOM(msg.text, msg.sender, msg.id);
+      });
+
+      // Clear any remaining preview context on shift
+      const matchingCode = session.messages.slice().reverse().find(m => m.text.includes("```html"));
+      if (matchingCode) {
+        const regex = /```html([\s\S]*?)```/i;
+        const match = matchingCode.text.match(regex);
+        if (match && match[1]) {
+          lastGeneratedCode = match[1].trim();
+        }
+      } else {
+        lastGeneratedCode = "";
+      }
+      reloadSandbox();
+
+      // Close structural panel
+      document.getElementById('history-drawer').classList.add('hidden');
+    }
+
+    // Eliminate specific historical logs
+    function deleteChat(id, event) {
+      if (event) event.stopPropagation();
+      chatHistory = chatHistory.filter(c => c.id !== id);
+      saveHistory();
+      
+      if (activeChatId === id) {
+        if (chatHistory.length > 0) {
+          loadChat(chatHistory[0].id);
+        } else {
+          createNewChat();
+        }
+      } else {
+        renderHistoryList();
+      }
+    }
+
+    // Populates saved elements to structural side list
+    function renderHistoryList() {
+      const container = document.getElementById('past-chats-list');
+      container.innerHTML = '';
+
+      chatHistory.forEach(chat => {
+        const item = document.createElement('div');
+        const isActive = chat.id === activeChatId;
+        item.className = `p-3 rounded-lg flex items-center justify-between cursor-pointer border transition-all ${
+          isActive 
+            ? 'bg-[#1c110d] border-[#ff4400] text-white' 
+            : 'bg-[#0d0806] border-[#1c110d] text-[#a69288] hover:border-[#2d1b14] hover:text-white'
+        }`;
+        item.onclick = () => loadChat(chat.id);
+
+        item.innerHTML = `
+          <div class="flex-1 min-w-0 pr-2">
+            <p class="text-xs font-bold truncate">${chat.title}</p>
+            <p class="text-[9px] text-[#7d675e] mt-1">${chat.timestamp}</p>
+          </div>
+          <button onclick="deleteChat('${chat.id}', event)" class="text-xs text-[#7d675e] hover:text-red-500 font-bold px-1.5 py-1 transition-colors">
+            ✕
+          </button>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function switchMode(mode) {
+      activeMode = mode;
+      syncModeUI();
+    }
+
+    function syncModeUI() {
+      const chatBtn = document.getElementById('btn-chat');
+      const appBtn = document.getElementById('btn-app');
+      const previewPanel = document.getElementById('preview-panel');
+      const inputField = document.getElementById('query-input');
+
+      if (activeMode === 'chat') {
+        chatBtn.className = "px-5 py-2 text-sm font-bold rounded-full transition-all duration-300 pointer-events-auto bg-gradient-to-r from-[#ff4400] to-[#ff6a00] text-white shadow-lg";
+        appBtn.className = "px-5 py-2 text-sm font-semibold text-[#a69288] hover:text-white rounded-full transition-all duration-300 pointer-events-auto";
+        previewPanel.classList.add('hidden');
+        inputField.placeholder = "Ask LAI anything...";
+      } else {
+        appBtn.className = "px-5 py-2 text-sm font-bold rounded-full transition-all duration-300 pointer-events-auto bg-gradient-to-r from-[#ff4400] to-[#ff6a00] text-white shadow-lg";
+        chatBtn.className = "px-5 py-2 text-sm font-semibold text-[#a69288] hover:text-white rounded-full transition-all duration-300 pointer-events-auto";
+        previewPanel.classList.remove('hidden');
+        inputField.placeholder = "Describe the app you want to build (e.g. Pomodoro timer, drawing canvas)...";
+        reloadSandbox();
+      }
+
+      // Keep active session meta aligned
+      const activeSession = chatHistory.find(c => c.id === activeChatId);
+      if (activeSession) {
+        activeSession.mode = activeMode;
+        saveHistory();
+      }
+    }
+
+    async function handleSend() {
+      const inputField = document.getElementById('query-input');
+      const userText = inputField.value.trim();
+      if (!userText) return;
+
+      // Ensure active session context
+      if (!activeChatId) {
+        createNewChat();
+      }
+
+      // Render & Store user prompt
+      appendMessageToDOM(userText, 'user');
+      addMessageToHistory(userText, 'user');
+      inputField.value = '';
+
+      // Update Session Title to match user prompt
+      const currentSession = chatHistory.find(c => c.id === activeChatId);
+      if (currentSession && currentSession.title === "New Volcanic Spark") {
+        currentSession.title = userText.substring(0, 24) + (userText.length > 24 ? "..." : "");
+        saveHistory();
+      }
+
+      // Trigger Eruption state feedback & full panel rumble
+      const eruptIndicator = document.getElementById('erupting-indicator');
+      const statusLabel = document.getElementById('erupting-status-label');
+      eruptIndicator.classList.remove('hidden');
+      document.body.classList.add('anim-rumble');
+
+      const thinkingMsgId = appendThinkingPlaceholder();
+
+      let systemPrompt = "You are LAI, an intelligent magma/volcano themed AI assistant. Provide high quality responses.";
+      if (activeMode === 'app') {
+        systemPrompt += " The user wants you to write a single-file application (HTML, CSS, JavaScript combined in one file). You MUST generate fully functional interactive projects enclosed inside standard markdown ```html ``` blocks. Do not use external CSS files, compile everything inline.";
+      }
+
+      const currentApiKey = getActiveKey();
+      let lastErrorMessage = "";
+      let networkSuccess = false;
+      let finalResponseText = "";
+
+      // Cascading model loop: Tries each fallback model in case of high demand / quota limits
+      for (let i = 0; i < FALLBACK_MODELS.length; i++) {
+        const targetModel = FALLBACK_MODELS[i];
+        
+        // Update both indicators
+        statusLabel.textContent = `Channelling ${targetModel} core energy...`;
+        updateThinkingPlaceholder(thinkingMsgId, `Channelling ${targetModel} core energy...`);
+
+        try {
+          const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${targetModel}:generateContent?key=${currentApiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: userText }] }],
+              systemInstruction: { parts: [{ text: systemPrompt }] }
+            })
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            finalResponseText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Eruption output generated blank content.";
+            networkSuccess = true;
+            break; // Succeeded! Break out of fallback loop.
+          } else {
+            const errBody = await response.json().catch(() => ({}));
+            lastErrorMessage = errBody?.error?.message || `HTTP Status Code: ${response.status}`;
+            console.warn(`Model ${targetModel} failed: ${lastErrorMessage}. Trying next fallback model...`);
+          }
+        } catch (error) {
+          lastErrorMessage = error.message;
+          console.warn(`Model ${targetModel} connection exception: ${lastErrorMessage}. Trying next fallback model...`);
+        }
+      }
 
       try {
-        let systemInstruction = "You are LAI, an intelligent assistant styled with a magma/lava theme. Provide accurate, powerful answers.";
-        if (currentMode === 'app') {
-          systemInstruction += " The user wants you to write a single-file application (HTML, CSS, JavaScript combined). You MUST return valid code inside standard markdown ```html ``` blocks. Make it completely functional, interactive, well-designed, and standalone so it can run immediately in an iframe.";
+        if (!networkSuccess) {
+          // If all models in our cascading fallback chain failed, throw the final gathered error
+          let troubleshooting = "";
+          if (!currentApiKey.startsWith("AQ.")) {
+            troubleshooting = `<br><br><span class="text-xs text-[#ffaa00] font-bold">⚠️ DIAGNOSTIC:</span> Your key does not match Google's standard modern prefix <code class="bg-[#1c110d] px-1 py-0.5 rounded text-white">AQ.</code>. Please regenerate a key in Google AI Studio.`;
+          }
+          throw new Error(`${lastErrorMessage}${troubleshooting}`);
         }
 
-        // Utilizing Google's high-compatibility web pipeline to route seamlessly inside the browser sandbox
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/openai/chat/completions`, {
-          method: 'POST',
-          headers: { 
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${API_KEY}`
-          },
-          body: JSON.stringify({
-            model: "gemini-2.5-flash",
-            messages: [
-              { role: "system", content: systemInstruction },
-              { role: "user", content: text }
-            ]
-          })
-        });
+        // Replace placeholder block with actual content
+        replaceThinkingPlaceholder(thinkingMsgId, finalResponseText);
+        addMessageToHistory(finalResponseText, 'lai');
 
-        if (!response.ok) {
-          throw new Error(`HTTP status error: ${response.status}`);
-        }
-
-        const data = await response.json();
-        const replyText = data.choices[0].message.content;
-
-        // Update placeholder message with AI content
-        updateMessage(aiMessageId, replyText);
-
-        // If in App Builder mode, find HTML block and render inside iframe
-        if (currentMode === 'app') {
-          const codeBlockRegex = /```html([\s\S]*?)```/i;
-          const match = replyText.match(codeBlockRegex);
+        // Apply Sandbox rendering inside workspace if app block found
+        if (activeMode === 'app') {
+          const codeRegex = /```html([\s\S]*?)```/i;
+          const match = finalResponseText.match(codeRegex);
           if (match && match[1]) {
-            const extractedCode = match[1].trim();
-            const iframe = document.getElementById('sandbox-iframe');
-            iframe.srcdoc = extractedCode;
+            lastGeneratedCode = match[1].trim();
+            reloadSandbox();
           }
         }
 
-      } catch (err) {
-        console.error(err);
-        updateMessage(aiMessageId, "Failed to connect to the magma core. Please confirm your API Key quota status or try reloading the file.");
+      } catch (error) {
+        console.error("Core Engine Connection Error:", error);
+        
+        let displayError = `💥 **System Eruption Warning:** Failed to process standard request to the API Core.<br><br><span class="text-xs bg-[#24120c] text-red-400 p-2 rounded block border border-red-900 font-mono">${error.message}</span>`;
+        replaceThinkingPlaceholder(thinkingMsgId, displayError);
+        addMessageToHistory(displayError, 'lai');
+      } finally {
+        eruptIndicator.classList.add('hidden');
+        document.body.classList.remove('anim-rumble');
       }
     }
 
-    function appendMessage(text, sender) {
-      const box = document.getElementById('messages-box');
-      const msg = document.createElement('div');
-      const id = 'msg-' + Date.now();
-      msg.id = id;
-      msg.className = `message ${sender}`;
-      
-      if (sender === 'user') {
-        msg.textContent = text;
+    // Save message items inside corresponding structures
+    function addMessageToHistory(text, sender) {
+      const session = chatHistory.find(c => c.id === activeChatId);
+      if (session) {
+        session.messages.push({
+          id: "msg_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5),
+          sender: sender,
+          text: text
+        });
+        saveHistory();
+      }
+    }
+
+    // Reload the frame contents
+    function reloadSandbox() {
+      const frame = document.getElementById('sandbox-frame');
+      if (lastGeneratedCode) {
+        frame.srcdoc = lastGeneratedCode;
       } else {
-        msg.innerHTML = formatMarkdown(text);
+        frame.srcdoc = `
+          <div style="font-family: 'Plus Jakarta Sans', sans-serif; text-align: center; padding-top: 100px; color: #4a2f24; background: #0d0806; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 0;">
+            <div style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #ff4400, #ffaa00); margin-bottom: 20px; box-shadow: 0 0 15px #ff4400; opacity: 0.6;"></div>
+            <h3 style="color: #ebdcd5; margin: 0 0 8px 0; font-size: 1.25rem;">Waiting for instructions...</h3>
+            <p style="color: #a69288; font-size: 0.875rem; margin: 0; max-width: 250px;">Describe the app you'd like to build on the left and click "Erupt"!</p>
+          </div>
+        `;
       }
+    }
+
+    // Render directly to display
+    function appendMessageToDOM(text, sender, id) {
+      const stream = document.getElementById('chat-stream');
+      const bubble = document.createElement('div');
+      if (id) bubble.id = id;
+
+      if (sender === 'user') {
+        bubble.className = "max-w-[85%] self-end bg-[#2d1b14] border-r-4 border-[#ff6a00] rounded-l-xl rounded-tb-xl p-4 shadow-md text-[#ebdcd5]";
+        bubble.textContent = text;
+      } else {
+        bubble.className = "max-w-[85%] self-start bg-[#160f0d] border-l-4 border-[#ff4400] rounded-r-xl rounded-bl-xl p-4 shadow-md text-[#ebdcd5]";
+        bubble.innerHTML = parseMarkdown(text);
+      }
+
+      stream.appendChild(bubble);
+      stream.scrollTop = stream.scrollHeight;
+    }
+
+    // Append dynamic indicator to structural DOM
+    function appendThinkingPlaceholder() {
+      const stream = document.getElementById('chat-stream');
+      const bubble = document.createElement('div');
+      const uniqueId = "thinking-" + Date.now();
+      bubble.id = uniqueId;
+      bubble.className = "max-w-[85%] self-start bg-[#160f0d] border-l-4 border-[#ff4400] rounded-r-xl rounded-bl-xl p-4 shadow-md text-[#ebdcd5] flex items-center gap-3";
       
-      box.appendChild(msg);
-      box.scrollTop = box.scrollHeight;
-      return id;
+      bubble.innerHTML = `
+        <svg viewBox="0 0 100 100" class="w-8 h-8 flex-shrink-0">
+          <polygon points="20,80 50,35 80,80" fill="#ff4400" class="anim-rumble" />
+          <ellipse cx="50" cy="36" rx="8" ry="3" fill="#ffaa00" />
+          <circle cx="50" cy="30" r="3" fill="#55443d" class="anim-smoke" />
+        </svg>
+        <span class="text-sm italic text-[#a69288] animate-pulse label-text">Magma core processing...</span>
+      `;
+
+      stream.appendChild(bubble);
+      stream.scrollTop = stream.scrollHeight;
+      return uniqueId;
     }
 
-    function updateMessage(id, text) {
-      const msg = document.getElementById(id);
-      if (msg) {
-        msg.innerHTML = formatMarkdown(text);
-        const box = document.getElementById('messages-box');
-        box.scrollTop = box.scrollHeight;
+    function updateThinkingPlaceholder(id, customText) {
+      const bubble = document.getElementById(id);
+      if (bubble) {
+        const label = bubble.querySelector('.label-text');
+        if (label) {
+          label.textContent = customText;
+        }
       }
     }
 
-    // Elementary markdown formatter for code blocks and bolding
-    function formatMarkdown(text) {
-      let html = text
+    function replaceThinkingPlaceholder(id, newText) {
+      const bubble = document.getElementById(id);
+      if (bubble) {
+        bubble.className = "max-w-[85%] self-start bg-[#160f0d] border-l-4 border-[#ff4400] rounded-r-xl rounded-bl-xl p-4 shadow-md text-[#ebdcd5]";
+        bubble.innerHTML = parseMarkdown(newText);
+        const stream = document.getElementById('chat-stream');
+        stream.scrollTop = stream.scrollHeight;
+      }
+    }
+
+    function appendSystemNotification(text) {
+      appendMessageToDOM(text, 'lai');
+    }
+
+    function parseMarkdown(text) {
+      return text
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
         .replace(/\*\*([\s\S]*?)\*\*/g, '<strong>$1</strong>')
-        .replace(/```html([\s\S]*?)```/gi, '<pre><code>$1</code></pre>')
-        .replace(/```javascript([\s\S]*?)```/gi, '<pre><code>$1</code></pre>')
-        .replace(/```css([\s\S]*?)```/gi, '<pre><code>$1</code></pre>')
-        .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
-        .replace(/`([^`]+)`/g, '<code>$1</code>')
+        .replace(/`([^`]+)`/g, '<code class="bg-[#241510] text-[#ffaa00] px-1.5 py-0.5 rounded font-mono text-sm">$1</code>')
+        .replace(/```html([\s\S]*?)```/gi, '<pre class="bg-black text-[#50fa7b] p-4 rounded-lg my-2 overflow-x-auto border border-[#2d1b14] font-mono text-xs"><code>$1</code></pre>')
+        .replace(/```javascript([\s\S]*?)```/gi, '<pre class="bg-black text-[#8be9fd] p-4 rounded-lg my-2 overflow-x-auto border border-[#2d1b14] font-mono text-xs"><code>$1</code></pre>')
+        .replace(/```css([\s\S]*?)```/gi, '<pre class="bg-black text-[#ff79c6] p-4 rounded-lg my-2 overflow-x-auto border border-[#2d1b14] font-mono text-xs"><code>$1</code></pre>')
+        .replace(/```([\s\S]*?)```/g, '<pre class="bg-black text-[#f8f8f2] p-4 rounded-lg my-2 overflow-x-auto border border-[#2d1b14] font-mono text-xs"><code>$1</code></pre>')
         .replace(/\n/g, '<br>');
-      return html;
     }
+
+    // Initialize sandbox and storage systems on start
+    window.onload = () => {
+      initHistory();
+    };
   </script>
 </body>
 </html>
