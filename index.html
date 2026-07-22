@@ -3,75 +3,78 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>LAI - Magma AI Suite</title>
+  <title>LAI - Volcanic AI Suite</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts for custom typography -->
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   
   <style>
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #0d0806;
+      background-color: #0b0705;
       color: #f7ede8;
     }
 
-    /* Scrollbar Styling */
     ::-webkit-scrollbar {
       width: 6px;
       height: 6px;
     }
     ::-webkit-scrollbar-track {
-      background: #140d0a;
+      background: #120b08;
     }
     ::-webkit-scrollbar-thumb {
-      background: #4a2f24;
-      border-radius: 3px;
+      background: #3d2319;
+      border-radius: 4px;
     }
     ::-webkit-scrollbar-thumb:hover {
       background: #ff5500;
     }
 
-    /* Obsidian glow transitions */
-    .magma-shadow {
-      box-shadow: 0 0 20px rgba(255, 68, 0, 0.15);
+    .magma-glow {
+      box-shadow: 0 0 25px rgba(255, 68, 0, 0.25);
     }
-    
-    .magma-border-glow:focus-within {
+
+    .magma-border:focus-within {
       border-color: #ff5500;
-      box-shadow: 0 0 15px rgba(255, 68, 0, 0.35);
+      box-shadow: 0 0 18px rgba(255, 68, 0, 0.4);
     }
 
-    /* Volcano Animation Keyframes */
+    /* Lava Bubble Animation for Voice Screen */
+    @keyframes spin-slow {
+      0% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(180deg) scale(1.08); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
+
+    @keyframes pulse-bubble {
+      0% {
+        box-shadow: 0 0 30px #ff3c00, 0 0 60px #ffaa00, inset 0 0 20px #ff0000;
+      }
+      50% {
+        box-shadow: 0 0 60px #ff5500, 0 0 100px #ffaa00, inset 0 0 40px #ffbb00;
+      }
+      100% {
+        box-shadow: 0 0 30px #ff3c00, 0 0 60px #ffaa00, inset 0 0 20px #ff0000;
+      }
+    }
+
+    .lava-orb {
+      background: radial-gradient(circle at 35% 35%, #ffcc00 0%, #ff4500 45%, #990000 80%, #330000 100%);
+      animation: spin-slow 8s ease-in-out infinite, pulse-bubble 2.5s ease-in-out infinite;
+    }
+
+    .lava-orb-active {
+      animation: spin-slow 3s ease-in-out infinite, pulse-bubble 1s ease-in-out infinite;
+    }
+
     @keyframes rumble {
-      0% { transform: translate(0, 0) rotate(0deg); }
-      20% { transform: translate(-1px, 1px) rotate(-0.5deg); }
-      40% { transform: translate(-1px, -1px) rotate(0.5deg); }
-      60% { transform: translate(1px, 1px) rotate(0deg); }
-      80% { transform: translate(-1px, 1px) rotate(0.5deg); }
-      100% { transform: translate(0, 0) rotate(0deg); }
-    }
-
-    @keyframes erupt-smoke {
-      0% { transform: translateY(0) scale(0.6); opacity: 0; }
-      20% { opacity: 0.8; }
-      100% { transform: translateY(-45px) scale(1.6); opacity: 0; }
-    }
-
-    @keyframes erupt-lava-left {
-      0% { transform: translate(0, 0) scale(1); opacity: 1; }
-      100% { transform: translate(-30px, -50px) scale(0.4); opacity: 0; }
-    }
-
-    @keyframes erupt-lava-right {
-      0% { transform: translate(0, 0) scale(1); opacity: 1; }
-      100% { transform: translate(30px, -50px) scale(0.4); opacity: 0; }
-    }
-
-    @keyframes erupt-lava-center {
-      0% { transform: translate(0, 0) scale(1); opacity: 1; }
-      100% { transform: translate(0px, -65px) scale(0.3); opacity: 0; }
+      0% { transform: translate(0, 0); }
+      25% { transform: translate(-1px, 1px); }
+      50% { transform: translate(1px, -1px); }
+      75% { transform: translate(-1px, -1px); }
+      100% { transform: translate(0, 0); }
     }
 
     @keyframes pulse-magma {
@@ -80,357 +83,446 @@
       100% { fill: #ff3c00; filter: drop-shadow(0 0 2px #ff3c00); }
     }
 
-    /* Animation Classes */
+    @keyframes float-smoke {
+      0% { transform: translateY(0) scale(0.7); opacity: 0; }
+      30% { opacity: 0.8; }
+      100% { transform: translateY(-35px) scale(1.5); opacity: 0; }
+    }
+
     .anim-rumble {
-      animation: rumble 0.15s infinite linear;
-    }
-
-    .anim-smoke {
-      animation: erupt-smoke 1.2s infinite ease-out;
-      transform-origin: bottom center;
-    }
-
-    .anim-lava-l {
-      animation: erupt-lava-left 0.8s infinite ease-out;
-    }
-
-    .anim-lava-r {
-      animation: erupt-lava-right 0.8s infinite ease-out;
-      animation-delay: 0.2s;
-    }
-
-    .anim-lava-c {
-      animation: erupt-lava-center 1s infinite ease-out;
-      animation-delay: 0.4s;
+      animation: rumble 0.2s infinite linear;
     }
 
     .pulse-magma-core {
-      animation: pulse-magma 1s infinite alternate ease-in-out;
+      animation: pulse-magma 1.2s infinite alternate ease-in-out;
+    }
+
+    .anim-smoke {
+      animation: float-smoke 1.4s infinite ease-out;
+      transform-origin: bottom center;
+    }
+
+    pre code {
+      font-family: 'JetBrains Mono', monospace;
     }
   </style>
 </head>
-<body class="h-screen w-screen flex flex-col overflow-hidden relative">
+<body class="h-screen w-screen flex flex-col overflow-hidden relative select-none">
 
-  <header class="bg-[#140d0a] border-b-2 border-[#ff4400] px-6 py-4 flex items-center justify-between z-20 magma-shadow">
-    <div class="flex items-center gap-3">
-      <!-- Minimalist Glowing Logo Element -->
-      <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-[#ff4400] to-[#ffaa00] shadow-[0_0_15px_#ff4400] animate-pulse"></div>
-      <span class="text-2xl font-extrabold tracking-wider bg-gradient-to-r from-white via-[#f7ede8] to-[#ff5500] bg-clip-text text-transparent">LAI</span>
-    </div>
-
-    <!-- Toggle Controls -->
-    <div class="flex items-center gap-4">
-      <div class="flex items-center gap-2 bg-[#0d0806] p-1 rounded-full border border-[#2d1b14]">
-        <button id="btn-chat" onclick="switchMode('chat')" class="px-5 py-2 text-sm font-bold rounded-full transition-all duration-300 pointer-events-auto bg-gradient-to-r from-[#ff4400] to-[#ff6a00] text-white shadow-lg">
-          Normal Chat
-        </button>
-        <button id="btn-app" onclick="switchMode('app')" class="px-5 py-2 text-sm font-semibold text-[#a69288] hover:text-white rounded-full transition-all duration-300 pointer-events-auto">
-          App Builder
-        </button>
+  <header class="bg-[#120b08] border-b border-[#2d1b14] px-4 md:px-6 py-3 flex items-center justify-between z-20 magma-glow">
+    <!-- Clickable LAI Logo Trigger -->
+    <div onclick="openMainMenu()" class="flex items-center gap-3 cursor-pointer group hover:opacity-90 transition-all" title="Click to open LAI Menu">
+      <div class="relative flex items-center justify-center">
+        <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-[#ff3c00] to-[#ffaa00] shadow-[0_0_15px_#ff4400] group-hover:scale-105 transition-all animate-pulse"></div>
+        <span class="absolute text-sm">🌋</span>
       </div>
-
-      <!-- Settings Icon - Re-purposed to Open Volcanic Archive / History -->
-      <button onclick="toggleHistoryDrawer()" class="p-2 rounded-lg bg-[#1c110d] hover:bg-[#2d1b14] border border-[#3d231a] transition-all flex items-center gap-2 text-[#ff6a00]" title="Volcanic Archives & Configuration">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-        </svg>
-        <span class="text-xs font-bold hidden sm:inline">History</span>
-      </button>
-    </div>
-  </header>
-
-  <!-- Volcanic Archives & Settings Drawer -->
-  <div id="history-drawer" class="hidden fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex justify-end">
-    <div class="bg-[#140d0a] border-l-2 border-[#ff4400] w-full max-w-md h-full p-6 shadow-2xl flex flex-col justify-between">
       <div>
+      <div class="flex items-center gap-1.5">
+        <h1 class="text-xl font-black tracking-wider bg-gradient-to-r from-white via-[#f7ede8] to-[#ff5500] bg-clip-text text-transparent">LAI</h1>
+        <span class="text-[10px] bg-[#281711] text-[#ff6a00] font-bold px-1.5 py-0.5 rounded border border-[#ff4400]/30">MENU ☰</span>
+      </div>
+      <p class="text-[10px] text-[#8a7368] font-semibold -mt-1 hidden sm:block">Volcanic Intelligence Engine</p>
+    </div>
+  </div>
+
+  <!-- Active Header Indicator -->
+  <div class="flex items-center gap-2 md:gap-3">
+    <div class="bg-[#1c120e] text-[#ffaa00] border border-[#ff5500]/40 text-xs font-bold rounded-lg px-2.5 py-1.5 shadow-sm">
+      🌋 Lava Studios AI Assistant
+    </div>
+  </div>
+</header>
+
+<div id="main-menu-drawer" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex justify-start transition-opacity">
+    <div class="bg-[#120b08] border-r border-[#ff4400]/40 w-full max-w-sm h-full p-5 shadow-2xl flex flex-col justify-between relative overflow-hidden">
+      
+      <div>
+        <!-- Menu Header with Title and Mini Gear Icon -->
         <div class="flex items-center justify-between mb-6 border-b border-[#2d1b14] pb-4">
-          <h3 class="text-lg font-extrabold text-white flex items-center gap-2">
-            <span class="text-[#ff6a00]">🌋</span> Volcanic Archives
-          </h3>
-          <button onclick="toggleHistoryDrawer()" class="text-[#a69288] hover:text-white font-bold text-lg">✕</button>
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">🌋</span>
+            <h2 class="text-2xl font-black tracking-wide text-white bg-gradient-to-r from-white to-[#ff6a00] bg-clip-text text-transparent">LAI</h2>
+          </div>
+          
+          <div class="flex items-center gap-2">
+            <!-- Mini Gear Icon for Developer Console Prompt -->
+            <button onclick="promptDevConsole()" class="p-2 rounded-lg bg-[#1c120e] hover:bg-[#ff4400]/20 border border-[#3d2319] hover:border-[#ff5500] text-[#ff6a00] transition-all" title="Developer Console">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </button>
+            <button onclick="closeMainMenu()" class="text-[#8a7368] hover:text-white font-bold text-xl p-1.5">✕</button>
+          </div>
         </div>
 
-        <button onclick="createNewChat()" class="w-full mb-4 py-2 px-4 bg-gradient-to-r from-[#ff4400] to-[#ffaa00] hover:brightness-110 active:scale-95 text-white font-bold text-sm rounded-lg shadow-md transition-all flex items-center justify-center gap-2">
-          <span>＋</span> New Chat Session
-        </button>
+        <!-- Persona Selections -->
+        <div class="mb-5">
+          <p class="text-[10px] font-extrabold uppercase tracking-widest text-[#8a7368] mb-2">Select Assistant Persona</p>
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="selectPersona('volcano')" class="persona-btn p-2.5 rounded-xl border border-[#ff5500] bg-[#281711] text-white text-xs font-bold text-left flex items-center gap-2 transition-all">
+              <span>🌋</span> Lava Assistant
+            </button>
+            <button onclick="selectPersona('creator')" class="persona-btn p-2.5 rounded-xl border border-[#3d2319] bg-[#160d09] text-[#d4c3bd] hover:border-[#ff5500] text-xs font-bold text-left flex items-center gap-2 transition-all">
+              <span>🎨</span> Image Creator
+            </button>
+            <button onclick="selectPersona('coder')" class="persona-btn p-2.5 rounded-xl border border-[#3d2319] bg-[#160d09] text-[#d4c3bd] hover:border-[#ff5500] text-xs font-bold text-left flex items-center gap-2 transition-all">
+              <span>💻</span> Code Architect
+            </button>
+            <button onclick="selectPersona('analyst')" class="persona-btn p-2.5 rounded-xl border border-[#3d2319] bg-[#160d09] text-[#d4c3bd] hover:border-[#ff5500] text-xs font-bold text-left flex items-center gap-2 transition-all">
+              <span>🔬</span> Deep Analyst
+            </button>
+          </div>
+        </div>
 
-        <!-- Past Chats Stream -->
-        <h4 class="text-xs font-bold uppercase tracking-widest text-[#7d675e] mb-3">Saved Conversations</h4>
-        <div id="past-chats-list" class="flex flex-col gap-2 max-h-[350px] overflow-y-auto pr-1">
-          <!-- Active loaded list items go here -->
+        <!-- Search Bar & New Chat Button -->
+        <div class="space-y-3 mb-4">
+          <div class="relative">
+            <input 
+              type="text" 
+              id="search-chats-input" 
+              oninput="filterChats()" 
+              placeholder="Search past chats..." 
+              class="w-full bg-[#160d09] border border-[#3d2319] rounded-xl px-3 py-2 pl-8 text-xs text-[#f7ede8] focus:border-[#ff5500] outline-none"
+            />
+            <span class="absolute left-2.5 top-2.5 text-xs text-[#8a7368]">🔍</span>
+          </div>
+
+          <button onclick="createNewChat()" class="w-full py-2.5 px-4 bg-gradient-to-r from-[#ff4400] to-[#ff6a00] hover:brightness-110 active:scale-95 text-white font-extrabold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
+            <span>＋</span> Start New Chat
+          </button>
+        </div>
+
+        <!-- Saved Chats List -->
+        <div>
+          <p class="text-[10px] font-extrabold uppercase tracking-widest text-[#8a7368] mb-2">Saved Volcanic Chats</p>
+          <div id="chats-list-container" class="flex flex-col gap-2 max-h-[220px] overflow-y-auto pr-1">
+            <!-- Populated dynamically -->
+          </div>
         </div>
       </div>
 
-      <!-- Collapsible API Configuration Area -->
-      <div class="border-t border-[#2d1b14] pt-4 mt-6">
-        <details class="group">
-          <summary class="list-none flex items-center justify-between text-xs font-bold text-[#a69288] cursor-pointer group-open:text-[#ff6a00] transition-colors">
-            <span class="flex items-center gap-2">
-              ⚙️ <span>Configure API Settings</span>
-            </span>
-            <span class="transition-transform group-open:rotate-180">▼</span>
-          </summary>
-          <div class="mt-4 bg-[#0d0806] border border-[#2d1b14] p-3 rounded-lg">
-            <p class="text-[10px] text-[#a69288] mb-3 leading-relaxed">
-              Gemini keys start with <strong class="text-white">AQ.</strong> or <strong class="text-white">AIzaSy</strong>. Update your key below if the default is exhausted or restricted.
-            </p>
-            <div class="flex gap-2">
-              <input 
-                type="password" 
-                id="api-key-input" 
-                class="flex-1 bg-[#140d0a] border border-[#3d231a] rounded px-2.5 py-1.5 text-xs text-[#f7ede8] focus:border-[#ff5500] outline-none font-mono" 
-                placeholder="AQ..."
-              />
-              <button onclick="saveApiKey()" class="bg-[#ff4400] hover:bg-[#ff6a00] text-white px-3 py-1.5 rounded text-xs font-bold transition-all">
-                Save
-              </button>
-            </div>
-          </div>
-        </details>
+      <div class="border-t border-[#2d1b14] pt-3 text-[10px] text-[#7d675e] text-center">
+        LAI Volcanic Core v3.5 • All Chats Saved Locally
       </div>
     </div>
   </div>
 
-  <!-- Main Workspace -->
-  <main class="flex-1 flex overflow-hidden relative">
-    
-    <!-- Left Section: Chat Box -->
-    <section class="flex-1 flex flex-col bg-[#110a08] h-full relative z-10">
+  <div id="dev-console-modal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-lg z-50 flex items-center justify-center p-4">
+    <div class="bg-[#120b08] border border-[#ff4400] rounded-2xl p-6 w-full max-w-md shadow-2xl relative">
+      <button onclick="closeDevConsole()" class="absolute top-3 right-3 text-[#8a7368] hover:text-white font-bold text-lg">✕</button>
       
-      <!-- Messages Stream -->
-      <div id="chat-stream" class="flex-1 p-6 overflow-y-auto flex flex-col gap-5">
-        <!-- Messages populate dynamically -->
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-xl">🛠️</span>
+        <h3 class="text-lg font-black text-white">Developer Console</h3>
       </div>
 
-      <!-- Live Loading / Volcanic Eruption Indicator -->
-      <div id="erupting-indicator" class="hidden px-6 py-4 bg-[#140d0a] border-t border-[#2d1b14] flex items-center gap-4 transition-all duration-300">
-        <!-- SVG Volcano Eruption Animation -->
-        <div class="w-16 h-16 flex-shrink-0 relative overflow-hidden bg-[#1c110d] rounded-lg border border-[#3d231a] flex items-center justify-center">
-          <svg viewBox="0 0 100 100" class="w-12 h-12">
-            <!-- Background Volcano Base (Rumbles) -->
+      <!-- Password Lock Screen -->
+      <div id="dev-lock-screen">
+        <p class="text-xs text-[#d4c3bd] mb-3">Enter developer authorization code to configure underlying Gemini AI models and parameters.</p>
+        <div class="flex gap-2 mb-3">
+          <input 
+            type="password" 
+            id="dev-code-input" 
+            placeholder="Enter passcode..." 
+            class="flex-1 bg-[#160d09] border border-[#3d2319] rounded-xl px-3 py-2 text-xs text-[#f7ede8] focus:border-[#ff5500] outline-none font-mono"
+            onkeydown="if(event.key === 'Enter') verifyDevCode()"
+          />
+          <button onclick="verifyDevCode()" class="bg-[#ff4400] hover:bg-[#ff6a00] text-white text-xs font-bold px-4 py-2 rounded-xl transition-all">
+            Unlock
+          </button>
+        </div>
+        <p id="dev-code-error" class="text-[11px] text-red-500 hidden font-bold">Incorrect Passcode. Access Denied.</p>
+      </div>
+
+      <!-- Unlocked Developer Options -->
+      <div id="dev-options-screen" class="hidden space-y-4">
+        <div class="p-2.5 bg-emerald-950/40 border border-emerald-500/40 rounded-xl text-emerald-400 text-xs font-bold flex items-center gap-2">
+          <span>✓</span> Developer Access Granted (JacobHT3)
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-[#d4c3bd] mb-1.5">Select Active Gemini Model Engine</label>
+          <select id="gemini-version-select" onchange="updateGeminiModel()" class="w-full bg-[#160d09] text-[#f7ede8] border border-[#3d2319] hover:border-[#ff5500] text-xs font-semibold rounded-xl p-2.5 outline-none cursor-pointer">
+            <option value="gemini-3.5-flash">Gemini 3.5 Flash (Recommended / Default)</option>
+            <option value="gemini-3-flash-preview">Gemini 3 Flash Preview</option>
+            <option value="gemini-3.1-flash-lite">Gemini 3.1 Flash Lite</option>
+            <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-[#d4c3bd] mb-1.5">Custom Gemini API Key Override</label>
+          <input 
+            type="password" 
+            id="custom-api-key-input" 
+            placeholder="Paste custom API key..." 
+            class="w-full bg-[#160d09] border border-[#3d2319] rounded-xl px-3 py-2 text-xs text-[#f7ede8] focus:border-[#ff5500] outline-none font-mono mb-2"
+          />
+          <button onclick="saveCustomApiKey()" class="w-full bg-[#281711] hover:bg-[#ff4400] border border-[#ff5500]/50 text-white text-xs font-bold py-2 rounded-xl transition-all">
+            Save Developer Settings
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="voice-screen-overlay" class="hidden fixed inset-0 bg-[#0b0705] z-50 flex flex-col justify-between p-6 overflow-hidden">
+    <!-- Top Bar -->
+    <div class="flex items-center justify-between z-10">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-[#ff4400] animate-ping"></span>
+        <span class="text-xs font-black uppercase tracking-wider text-[#ff6a00]">LAI Voice Assistant</span>
+      </div>
+      <button onclick="closeVoiceMode()" class="bg-[#1c120e] hover:bg-[#2d1b14] border border-[#3d2319] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all">
+        ✕ Exit Voice Mode
+      </button>
+    </div>
+
+    <!-- Center Spinning & Pulsing Magma Bubble -->
+    <div class="flex-1 flex flex-col items-center justify-center text-center relative my-8">
+      <div id="magma-voice-orb" class="w-48 h-48 sm:w-64 sm:h-64 rounded-full lava-orb flex items-center justify-center cursor-pointer shadow-2xl transition-all" onclick="toggleVoiceListening()">
+        <span class="text-5xl select-none">🌋</span>
+      </div>
+
+      <p id="voice-status-text" class="mt-8 text-sm sm:text-base font-black text-[#ffaa00] animate-pulse">
+        Listening... Speak now
+      </p>
+      <p id="voice-subtext" class="mt-2 text-xs text-[#8a7368] max-w-md">
+        Tap the magma orb or speak into your microphone. LAI will analyze and read responses aloud.
+      </p>
+    </div>
+
+    <!-- Live Transcript & Response Display -->
+    <div class="bg-[#120b08] border border-[#2d1b14] rounded-2xl p-4 max-h-40 overflow-y-auto z-10">
+      <p class="text-[10px] font-bold uppercase tracking-wider text-[#7d675e] mb-1">Transcript Box</p>
+      <p id="voice-transcript-output" class="text-xs text-[#f7ede8] italic">Listening for user speech...</p>
+    </div>
+  </div>
+
+  <main class="flex-1 flex overflow-hidden relative">
+    <!-- Chat Stream View -->
+    <section class="flex-1 flex flex-col bg-[#0b0705] h-full relative z-10">
+      
+      <!-- Messages Stream -->
+      <div id="chat-stream" class="flex-1 p-4 md:p-6 overflow-y-auto flex flex-col gap-4 select-text">
+        <!-- Messages populated dynamically -->
+      </div>
+
+      <!-- Eruption Indicator / Thinking Spinner -->
+      <div id="eruption-indicator" class="hidden px-5 py-3 bg-[#120b08] border-t border-[#2d1b14] flex items-center gap-3">
+        <div class="w-10 h-10 flex-shrink-0 relative overflow-hidden bg-[#1c120e] rounded-xl border border-[#3d2319] flex items-center justify-center">
+          <svg viewBox="0 0 100 100" class="w-8 h-8">
             <g class="anim-rumble">
               <polygon points="20,80 50,35 80,80" fill="#2d1d17" stroke="#1c110d" stroke-width="2" />
-              <!-- Magma in Crater -->
               <ellipse cx="50" cy="36" rx="8" ry="3" class="pulse-magma-core" />
-              <!-- Lava flowing down side -->
-              <path d="M48,36 Q45,55 35,70" stroke="#ff4400" stroke-width="2.5" fill="none" stroke-linecap="round" />
-              <path d="M52,36 Q55,50 62,65" stroke="#ffaa00" stroke-width="2" fill="none" stroke-linecap="round" />
             </g>
-            
-            <!-- Erupting Particles / Smoke -->
-            <circle cx="50" cy="30" r="4" fill="#55443d" class="anim-smoke" />
-            <circle cx="48" cy="28" r="5" fill="#3d302b" class="anim-smoke" style="animation-delay: 0.3s;" />
-            <circle cx="52" cy="26" r="3" fill="#6e5a52" class="anim-smoke" style="animation-delay: 0.6s;" />
-            
-            <!-- Lava Sparks -->
-            <circle cx="49" cy="34" r="2" fill="#ff2200" class="anim-lava-l" />
-            <circle cx="51" cy="34" r="2" fill="#ffbb00" class="anim-lava-r" />
-            <circle cx="50" cy="34" r="1.5" fill="#ff7700" class="anim-lava-c" />
+            <circle cx="50" cy="30" r="3" fill="#55443d" class="anim-smoke" />
+            <circle cx="48" cy="27" r="4" fill="#3d302b" class="anim-smoke" style="animation-delay: 0.3s;" />
           </svg>
         </div>
         <div>
-          <p class="text-sm font-bold text-[#ff6a00] animate-pulse">VOLCANO ERUPTING...</p>
-          <p id="erupting-status-label" class="text-xs text-[#a69288]">LAI is channeling magma core energy for your response...</p>
+          <p id="indicator-status" class="text-xs font-extrabold text-[#ff6a00] animate-pulse">LAI is synthesizing...</p>
+          <p class="text-[10px] text-[#8a7368]">Channelling volcanic intelligence core</p>
         </div>
       </div>
 
-      <!-- Input Actions -->
-      <div class="p-6 bg-[#0d0806] border-t border-[#25150f] z-10">
-        <div class="flex gap-3 bg-[#170e0a] border border-[#2d1b14] rounded-xl p-2 magma-border-glow transition-all duration-300">
-          <input 
-            type="text" 
+      <!-- Attached Image Preview -->
+      <div id="image-attachment-preview" class="hidden px-5 py-2 bg-[#120b08] border-t border-[#2d1b14] flex items-center gap-3">
+        <div class="relative w-12 h-12 rounded-lg overflow-hidden border border-[#ff5500]">
+          <img id="attached-img-tag" src="" class="w-full h-full object-cover" />
+          <button onclick="clearAttachedImage()" class="absolute top-0 right-0 bg-black/80 text-white text-[10px] px-1 font-bold">✕</button>
+        </div>
+        <span class="text-xs text-[#a69288] font-semibold">Image attached for LAI analysis</span>
+      </div>
+
+      <!-- Input Controls -->
+      <div class="p-3 md:p-5 bg-[#120b08] border-t border-[#2d1b14]">
+        <div class="flex items-center gap-2 bg-[#1a100c] border border-[#2d1b14] rounded-2xl p-2 magma-border transition-all duration-300">
+          
+          <!-- Attachment Button -->
+          <label class="p-2 rounded-xl text-[#8a7368] hover:text-[#ff6a00] hover:bg-[#281711] cursor-pointer transition-all" title="Attach Image">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <input type="file" id="file-input" accept="image/*" onchange="handleImageAttach(event)" class="hidden" />
+          </label>
+
+          <!-- Voice Screen Trigger Button -->
+          <button onclick="openVoiceMode()" class="p-2 rounded-xl text-[#8a7368] hover:text-[#ff6a00] hover:bg-[#281711] transition-all" title="Open Voice Screen">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 016 0v6a3 3 0 01-3 3z" />
+            </svg>
+          </button>
+
+          <!-- Input Text Area -->
+          <textarea 
             id="query-input" 
-            class="flex-1 bg-transparent border-none outline-none text-[#f7ede8] placeholder-[#7d675e] px-3 py-2 text-base pointer-events-auto" 
-            placeholder="Ask LAI anything..."
-            onkeydown="if(event.key === 'Enter') handleSend()"
-          />
+            rows="1" 
+            class="flex-1 bg-transparent border-none outline-none text-[#f7ede8] placeholder-[#7d675e] px-2 py-1 text-sm md:text-base resize-none max-h-32"
+            placeholder="Message LAI..."
+            onkeydown="handleKeyDown(event)"
+          ></textarea>
+
+          <!-- Send Button -->
           <button 
             onclick="handleSend()" 
-            class="px-6 py-2.5 bg-gradient-to-r from-[#ff4400] to-[#ff6a00] hover:brightness-110 active:scale-95 text-white font-extrabold rounded-lg tracking-wide shadow-md transition-all pointer-events-auto"
+            class="px-5 py-2.5 bg-gradient-to-r from-[#ff4400] to-[#ff6a00] hover:brightness-110 active:scale-95 text-white font-extrabold rounded-xl tracking-wide shadow-md transition-all flex items-center justify-center gap-1"
           >
-            Erupt
+            <span>Erupt</span>
+            <span class="text-xs">➔</span>
           </button>
         </div>
       </div>
     </section>
 
-    <!-- Right Section: Live Code Frame (App Builder Output) -->
-    <section id="preview-panel" class="hidden w-1/2 h-full bg-white border-l-2 border-[#25150f] flex flex-col relative z-10">
-      <div class="bg-[#140d0a] text-white px-4 py-3 border-b border-[#25150f] flex items-center justify-between">
+    <!-- Code Preview Sandbox Drawer -->
+    <section id="code-inspector" class="hidden w-full md:w-1/2 h-full bg-[#120b08] border-l border-[#2d1b14] flex flex-col z-10 transition-all">
+      <div class="bg-[#1c120e] text-white px-4 py-3 border-b border-[#2d1b14] flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></div>
-          <span class="text-xs font-bold uppercase tracking-wider text-[#a69288]">Live App Sandbox</span>
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+          <span class="text-xs font-extrabold uppercase tracking-wider text-[#d4c3bd]">Live App Sandbox</span>
         </div>
-        <button onclick="reloadSandbox()" class="text-xs bg-[#241510] hover:bg-[#382119] border border-[#3d231a] px-2.5 py-1 rounded text-[#ebdcd5] pointer-events-auto">
-          Reset Window
+        <button onclick="toggleCodeInspector(false)" class="text-xs bg-[#281711] hover:bg-[#3d2319] border border-[#3d2319] px-2.5 py-1 rounded-lg text-[#f7ede8]">
+          Close Sandbox ✕
         </button>
       </div>
-      <iframe id="sandbox-frame" class="w-full flex-1 border-none bg-white"></iframe>
+      <iframe id="sandbox-iframe" class="w-full flex-1 border-none bg-white"></iframe>
     </section>
-
   </main>
 
   <script>
-    // Updated to support Google's new secure "AQ." official API Key format
-    const DEFAULT_KEY = "AQ.Ab8RN6LCB-hAHPNb0gwNnXH5ye1iaSVlV9xA36oPNS8QQqygew";
-    
-    // Dynamic Fallback Model Array to secure high availability in high-demand events
-    const FALLBACK_MODELS = [
-      "gemini-3.5-flash",
-      "gemini-3.1-flash-lite",
-      "gemini-2.5-flash"
-    ];
-
-    let activeMode = "chat";
-    let lastGeneratedCode = "";
-    
-    // Manage state of local history sessions
     let activeChatId = null;
     let chatHistory = [];
+    let activePersona = 'volcano';
+    let selectedModel = 'gemini-3.5-flash';
+    let attachedImageBase64 = null;
+    let recognition = null;
+    let isVoiceActive = false;
 
-    // Get Active Connection Config
-    function getActiveKey() {
-      const saved = localStorage.getItem('lai_gemini_key');
-      return saved ? saved : DEFAULT_KEY;
-    }
+    const PERSONA_PROMPTS = {
+      volcano: "You are LAI, an intelligent, high-energy AI assistant with a subtle volcanic/magma thematic tone. Be insightful, precise, engaging, and clear.",
+      coder: "You are LAI in Code Architect mode. Focus on clean, highly optimized, error-free software engineering solutions, providing robust code snippets and clear explanations.",
+      creator: "You are LAI in Image Creator mode. Focus on generating descriptive artistic visual prompts and rendering visual concepts directly.",
+      analyst: "You are LAI in Deep Analyst mode. Provide comprehensive, structured, step-by-step logical reasoning and thorough breakdown of complex topics."
+    };
 
-    // Toggle Volcanic Archives Panel
-    function toggleHistoryDrawer() {
-      const drawer = document.getElementById('history-drawer');
-      drawer.classList.toggle('hidden');
-      if (!drawer.classList.contains('hidden')) {
-        renderHistoryList();
-        document.getElementById('api-key-input').value = getActiveKey();
-      }
-    }
+    const PERSONA_NAMES = {
+      volcano: "🌋 Lava Assistant",
+      creator: "🎨 Image Creator",
+      coder: "💻 Code Architect",
+      analyst: "🔬 Deep Analyst"
+    };
 
-    // Save customized API config securely
-    function saveApiKey() {
-      const input = document.getElementById('api-key-input').value.trim();
-      if (input) {
-        localStorage.setItem('lai_gemini_key', input);
-      } else {
-        localStorage.removeItem('lai_gemini_key');
-      }
-      appendSystemNotification("🔄 **API update applied.** Using: `" + (input ? input.substring(0,6) + "..." : "New Standard AQ API Channel") + "`");
-    }
-
-    // Load entire history context on start
-    function initHistory() {
-      const saved = localStorage.getItem('lai_chat_history');
-      if (saved) {
-        try {
-          chatHistory = JSON.parse(saved);
-        } catch(e) {
-          chatHistory = [];
-        }
-      }
-      
+    function initApp() {
+      loadHistoryFromStorage();
       if (chatHistory.length === 0) {
         createNewChat();
       } else {
-        loadChat(chatHistory[0].id);
+        loadChatSession(chatHistory[0].id);
+      }
+      setupVoiceRecognition();
+    }
+
+    function saveHistoryToStorage() {
+      localStorage.setItem('lai_saved_sessions_v3', JSON.stringify(chatHistory));
+    }
+
+    function loadHistoryFromStorage() {
+      const saved = localStorage.getItem('lai_saved_sessions_v3');
+      if (saved) {
+        try {
+          chatHistory = JSON.parse(saved);
+        } catch (e) {
+          chatHistory = [];
+        }
       }
     }
 
-    // Create a pristine conversational instance
     function createNewChat() {
       const newId = "chat_" + Date.now();
       const defaultMsg = {
         id: "msg_init_" + Date.now(),
         sender: "lai",
-        text: "🔥 **LAI Magma Core Online**\n\nWelcome back to the suite. Select **App Builder** above if you want me to write and automatically run complete single-file interactive templates!"
+        text: "🌋 **LAI Core Online**\n\nGreetings! I am LAI. Click my logo in the top corner anytime to switch personas or search past chats!"
       };
 
       const newChat = {
         id: newId,
         title: "New Volcanic Spark",
-        timestamp: new Date().toLocaleString(),
-        mode: activeMode,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         messages: [defaultMsg]
       };
 
       chatHistory.unshift(newChat);
-      saveHistory();
-      loadChat(newId);
+      saveHistoryToStorage();
+      loadChatSession(newId);
     }
 
-    // Save state to disk
-    function saveHistory() {
-      localStorage.setItem('lai_chat_history', JSON.stringify(chatHistory));
-    }
-
-    // Load active stream from specific session
-    function loadChat(id) {
+    function loadChatSession(id) {
       activeChatId = id;
       const session = chatHistory.find(c => c.id === id);
       if (!session) return;
-
-      activeMode = session.mode || 'chat';
-      syncModeUI();
 
       const stream = document.getElementById('chat-stream');
       stream.innerHTML = '';
 
       session.messages.forEach(msg => {
-        appendMessageToDOM(msg.text, msg.sender, msg.id);
+        appendMessageToDOM(msg.text, msg.sender, msg.id, msg.imageUrl);
       });
 
-      // Clear any remaining preview context on shift
-      const matchingCode = session.messages.slice().reverse().find(m => m.text.includes("```html"));
-      if (matchingCode) {
-        const regex = /```html([\s\S]*?)```/i;
-        const match = matchingCode.text.match(regex);
-        if (match && match[1]) {
-          lastGeneratedCode = match[1].trim();
-        }
-      } else {
-        lastGeneratedCode = "";
-      }
-      reloadSandbox();
-
-      // Close structural panel
-      document.getElementById('history-drawer').classList.add('hidden');
+      renderSessionsList();
+      closeMainMenu();
     }
 
-    // Eliminate specific historical logs
-    function deleteChat(id, event) {
+    function deleteChatSession(id, event) {
       if (event) event.stopPropagation();
       chatHistory = chatHistory.filter(c => c.id !== id);
-      saveHistory();
+      saveHistoryToStorage();
       
       if (activeChatId === id) {
         if (chatHistory.length > 0) {
-          loadChat(chatHistory[0].id);
+          loadChatSession(chatHistory[0].id);
         } else {
           createNewChat();
         }
       } else {
-        renderHistoryList();
+        renderSessionsList();
       }
     }
 
-    // Populates saved elements to structural side list
-    function renderHistoryList() {
-      const container = document.getElementById('past-chats-list');
+    function filterChats() {
+      const query = document.getElementById('search-chats-input').value.toLowerCase().trim();
+      renderSessionsList(query);
+    }
+
+    function renderSessionsList(filterQuery = '') {
+      const container = document.getElementById('chats-list-container');
       container.innerHTML = '';
 
-      chatHistory.forEach(chat => {
-        const item = document.createElement('div');
+      const filtered = chatHistory.filter(c => c.title.toLowerCase().includes(filterQuery));
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<p class="text-[11px] text-[#7d675e] p-2 text-center">No chats found.</p>`;
+        return;
+      }
+
+      filtered.forEach(chat => {
         const isActive = chat.id === activeChatId;
-        item.className = `p-3 rounded-lg flex items-center justify-between cursor-pointer border transition-all ${
+        const item = document.createElement('div');
+        item.className = `p-2.5 rounded-xl flex items-center justify-between cursor-pointer border transition-all ${
           isActive 
-            ? 'bg-[#1c110d] border-[#ff4400] text-white' 
-            : 'bg-[#0d0806] border-[#1c110d] text-[#a69288] hover:border-[#2d1b14] hover:text-white'
+            ? 'bg-[#1c120e] border-[#ff4400] text-white' 
+            : 'bg-[#0b0705] border-[#1c120e] text-[#8a7368] hover:border-[#2d1b14] hover:text-white'
         }`;
-        item.onclick = () => loadChat(chat.id);
+        item.onclick = () => loadChatSession(chat.id);
 
         item.innerHTML = `
           <div class="flex-1 min-w-0 pr-2">
             <p class="text-xs font-bold truncate">${chat.title}</p>
-            <p class="text-[9px] text-[#7d675e] mt-1">${chat.timestamp}</p>
+            <p class="text-[9px] text-[#7d675e] mt-0.5">${chat.timestamp}</p>
           </div>
-          <button onclick="deleteChat('${chat.id}', event)" class="text-xs text-[#7d675e] hover:text-red-500 font-bold px-1.5 py-1 transition-colors">
+          <button onclick="deleteChatSession('${chat.id}', event)" class="text-xs text-[#7d675e] hover:text-red-500 font-bold px-1.5 py-1 transition-colors">
             ✕
           </button>
         `;
@@ -438,259 +530,444 @@
       });
     }
 
-    function switchMode(mode) {
-      activeMode = mode;
-      syncModeUI();
+    function openMainMenu() {
+    document.getElementById('main-menu-drawer').classList.remove('hidden');
+    renderSessionsList();
+  }
+
+  function closeMainMenu() {
+    document.getElementById('main-menu-drawer').classList.add('hidden');
+  }
+
+  function selectPersona(key) {
+    activePersona = key;
+    const personaBadge = document.getElementById('active-persona-badge');
+    if (personaBadge) personaBadge.textContent = PERSONA_NAMES[key];
+    
+    const buttons = document.querySelectorAll('.persona-btn');
+    buttons.forEach(btn => {
+      btn.classList.remove('border-[#ff5500]', 'bg-[#281711]', 'text-white');
+      btn.classList.add('border-[#3d2319]', 'bg-[#160d09]', 'text-[#d4c3bd]');
+    });
+
+    event.currentTarget.classList.remove('border-[#3d2319]', 'bg-[#160d09]', 'text-[#d4c3bd]');
+    event.currentTarget.classList.add('border-[#ff5500]', 'bg-[#281711]', 'text-white');
+
+    closeMainMenu();
+  }
+
+  function promptDevConsole() {
+    document.getElementById('dev-console-modal').classList.remove('hidden');
+    document.getElementById('dev-code-input').value = '';
+    document.getElementById('dev-code-error').classList.add('hidden');
+  }
+
+  function closeDevConsole() {
+    document.getElementById('dev-console-modal').classList.add('hidden');
+  }
+
+  function verifyDevCode() {
+    const code = document.getElementById('dev-code-input').value.trim();
+    if (code === 'JacobHT3') {
+      document.getElementById('dev-lock-screen').classList.add('hidden');
+      document.getElementById('dev-options-screen').classList.remove('hidden');
+    } else {
+      document.getElementById('dev-code-error').classList.remove('hidden');
+    }
+  }
+
+  function updateGeminiModel() {
+    selectedModel = document.getElementById('gemini-version-select').value;
+    const modelBadge = document.getElementById('active-model-badge');
+    if (modelBadge) modelBadge.textContent = selectedModel;
+  }
+
+  function saveCustomApiKey() {
+      const key = document.getElementById('custom-api-key-input').value.trim();
+      if (key) {
+        localStorage.setItem('lai_user_api_key', key);
+        alert("Developer API key saved!");
+      } else {
+        localStorage.removeItem('lai_user_api_key');
+        alert("Cleared developer key.");
+      }
     }
 
-    function syncModeUI() {
-      const chatBtn = document.getElementById('btn-chat');
-      const appBtn = document.getElementById('btn-app');
-      const previewPanel = document.getElementById('preview-panel');
-      const inputField = document.getElementById('query-input');
+    function openVoiceMode() {
+      document.getElementById('voice-screen-overlay').classList.remove('hidden');
+      toggleVoiceListening(true);
+    }
 
-      if (activeMode === 'chat') {
-        chatBtn.className = "px-5 py-2 text-sm font-bold rounded-full transition-all duration-300 pointer-events-auto bg-gradient-to-r from-[#ff4400] to-[#ff6a00] text-white shadow-lg";
-        appBtn.className = "px-5 py-2 text-sm font-semibold text-[#a69288] hover:text-white rounded-full transition-all duration-300 pointer-events-auto";
-        previewPanel.classList.add('hidden');
-        inputField.placeholder = "Ask LAI anything...";
-      } else {
-        appBtn.className = "px-5 py-2 text-sm font-bold rounded-full transition-all duration-300 pointer-events-auto bg-gradient-to-r from-[#ff4400] to-[#ff6a00] text-white shadow-lg";
-        chatBtn.className = "px-5 py-2 text-sm font-semibold text-[#a69288] hover:text-white rounded-full transition-all duration-300 pointer-events-auto";
-        previewPanel.classList.remove('hidden');
-        inputField.placeholder = "Describe the app you want to build (e.g. Pomodoro timer, drawing canvas)...";
-        reloadSandbox();
+    function closeVoiceMode() {
+      document.getElementById('voice-screen-overlay').classList.add('hidden');
+      if (speechSynthesis) speechSynthesis.cancel();
+      toggleVoiceListening(false);
+    }
+
+    function setupVoiceRecognition() {
+      if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        const SpeechReg = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechReg();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+
+        recognition.onresult = (event) => {
+          const transcript = event.results[0][0].transcript;
+          document.getElementById('voice-transcript-output').textContent = `"${transcript}"`;
+          document.getElementById('voice-status-text').textContent = "Processing speech with LAI...";
+          
+          handleSendFromVoice(transcript);
+        };
+
+        recognition.onerror = () => {
+          document.getElementById('voice-status-text').textContent = "Tap Orb to Try Again";
+          setOrbState(false);
+        };
+
+        recognition.onend = () => {
+          if (!isVoiceActive) setOrbState(false);
+        };
+      }
+    }
+
+    function toggleVoiceListening(forceState) {
+      if (!recognition) {
+        alert("Speech Recognition not supported in this browser.");
+        return;
       }
 
-      // Keep active session meta aligned
-      const activeSession = chatHistory.find(c => c.id === activeChatId);
-      if (activeSession) {
-        activeSession.mode = activeMode;
-        saveHistory();
+      if (forceState === false || isVoiceActive) {
+        recognition.stop();
+        isVoiceActive = false;
+        setOrbState(false);
+        document.getElementById('voice-status-text').textContent = "Tap Orb to Speak";
+      } else {
+        recognition.start();
+        isVoiceActive = true;
+        setOrbState(true);
+        document.getElementById('voice-status-text').textContent = "Listening... Speak now";
+      }
+    }
+
+    function setOrbState(active) {
+      const orb = document.getElementById('magma-voice-orb');
+      if (active) {
+        orb.classList.add('lava-orb-active');
+      } else {
+        orb.classList.remove('lava-orb-active');
       }
     }
 
     async function handleSend() {
-      const inputField = document.getElementById('query-input');
-      const userText = inputField.value.trim();
-      if (!userText) return;
+      const inputElem = document.getElementById('query-input');
+      const promptText = inputElem.value.trim();
+      const currentImg = attachedImageBase64;
 
-      // Ensure active session context
-      if (!activeChatId) {
-        createNewChat();
+      if (!promptText && !currentImg) return;
+
+      // Clear input & image attachments
+      inputElem.value = '';
+      inputElem.style.height = 'auto';
+      clearAttachedImage();
+
+      // Display user message in chat stream and record in history
+      appendMessageToDOM(promptText || "Attached Image Analysis", 'user', null, currentImg);
+      addMessageToHistory(promptText || "Attached Image Analysis", 'user', currentImg);
+
+      // Auto-update conversation title if default
+      const session = chatHistory.find(c => c.id === activeChatId);
+      if (session && (session.title === "New Volcanic Spark" || session.messages.length <= 3)) {
+        const titleText = promptText.slice(0, 25) || "Image Analysis";
+        session.title = titleText + (promptText.length > 25 ? "..." : "");
+        renderSessionsList();
       }
 
-      // Render & Store user prompt
-      appendMessageToDOM(userText, 'user');
-      addMessageToHistory(userText, 'user');
-      inputField.value = '';
+      // Show eruption indicator & thinking placeholder
+      document.getElementById('eruption-indicator').classList.remove('hidden');
+      const placeholderId = appendThinkingPlaceholder();
 
-      // Update Session Title to match user prompt
-      const currentSession = chatHistory.find(c => c.id === activeChatId);
-      if (currentSession && currentSession.title === "New Volcanic Spark") {
-        currentSession.title = userText.substring(0, 24) + (userText.length > 24 ? "..." : "");
-        saveHistory();
-      }
-
-      // Trigger Eruption state feedback & full panel rumble
-      const eruptIndicator = document.getElementById('erupting-indicator');
-      const statusLabel = document.getElementById('erupting-status-label');
-      eruptIndicator.classList.remove('hidden');
-      document.body.classList.add('anim-rumble');
-
-      const thinkingMsgId = appendThinkingPlaceholder();
-
-      let systemPrompt = "You are LAI, an intelligent magma/volcano themed AI assistant. Provide high quality responses.";
-      if (activeMode === 'app') {
-        systemPrompt += " The user wants you to write a single-file application (HTML, CSS, JavaScript combined in one file). You MUST generate fully functional interactive projects enclosed inside standard markdown ```html ``` blocks. Do not use external CSS files, compile everything inline.";
-      }
-
-      const currentApiKey = getActiveKey();
-      let lastErrorMessage = "";
-      let networkSuccess = false;
-      let finalResponseText = "";
-
-      // Cascading model loop: Tries each fallback model in case of high demand / quota limits
-      for (let i = 0; i < FALLBACK_MODELS.length; i++) {
-        const targetModel = FALLBACK_MODELS[i];
-        
-        // Update both indicators
-        statusLabel.textContent = `Channelling ${targetModel} core energy...`;
-        updateThinkingPlaceholder(thinkingMsgId, `Channelling ${targetModel} core energy...`);
-
-        try {
-          const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${targetModel}:generateContent?key=${currentApiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: [{ parts: [{ text: userText }] }],
-              systemInstruction: { parts: [{ text: systemPrompt }] }
-            })
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            finalResponseText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Eruption output generated blank content.";
-            networkSuccess = true;
-            break; // Succeeded! Break out of fallback loop.
-          } else {
-            const errBody = await response.json().catch(() => ({}));
-            lastErrorMessage = errBody?.error?.message || `HTTP Status Code: ${response.status}`;
-            console.warn(`Model ${targetModel} failed: ${lastErrorMessage}. Trying next fallback model...`);
-          }
-        } catch (error) {
-          lastErrorMessage = error.message;
-          console.warn(`Model ${targetModel} connection exception: ${lastErrorMessage}. Trying next fallback model...`);
-        }
-      }
+      const userKey = localStorage.getItem('lai_user_api_key') || "";
 
       try {
-        if (!networkSuccess) {
-          // If all models in our cascading fallback chain failed, throw the final gathered error
-          let troubleshooting = "";
-          if (!currentApiKey.startsWith("AQ.")) {
-            troubleshooting = `<br><br><span class="text-xs text-[#ffaa00] font-bold">⚠️ DIAGNOSTIC:</span> Your key does not match Google's standard modern prefix <code class="bg-[#1c110d] px-1 py-0.5 rounded text-white">AQ.</code>. Please regenerate a key in Google AI Studio.`;
-          }
-          throw new Error(`${lastErrorMessage}${troubleshooting}`);
-        }
-
-        // Replace placeholder block with actual content
-        replaceThinkingPlaceholder(thinkingMsgId, finalResponseText);
-        addMessageToHistory(finalResponseText, 'lai');
-
-        // Apply Sandbox rendering inside workspace if app block found
-        if (activeMode === 'app') {
-          const codeRegex = /```html([\s\S]*?)```/i;
-          const match = finalResponseText.match(codeRegex);
-          if (match && match[1]) {
-            lastGeneratedCode = match[1].trim();
-            reloadSandbox();
-          }
-        }
-
-      } catch (error) {
-        console.error("Core Engine Connection Error:", error);
-        
-        let displayError = `💥 **System Eruption Warning:** Failed to process standard request to the API Core.<br><br><span class="text-xs bg-[#24120c] text-red-400 p-2 rounded block border border-red-900 font-mono">${error.message}</span>`;
-        replaceThinkingPlaceholder(thinkingMsgId, displayError);
-        addMessageToHistory(displayError, 'lai');
+        const reply = await callGeminiAPI(promptText, currentImg, activePersona, selectedModel, userKey);
+        replaceThinkingPlaceholder(placeholderId, reply);
+        addMessageToHistory(reply, 'lai');
+      } catch (err) {
+        console.error("API Call Error:", err);
+        const errorReply = "🌋 **Volcanic Core Notice**\n\nUnable to reach Gemini core services. Please check network connection or developer console configuration.";
+        replaceThinkingPlaceholder(placeholderId, errorReply);
+        addMessageToHistory(errorReply, 'lai');
       } finally {
-        eruptIndicator.classList.add('hidden');
-        document.body.classList.remove('anim-rumble');
+        document.getElementById('eruption-indicator').classList.add('hidden');
       }
     }
 
-    // Save message items inside corresponding structures
-    function addMessageToHistory(text, sender) {
-      const session = chatHistory.find(c => c.id === activeChatId);
-      if (session) {
-        session.messages.push({
-          id: "msg_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5),
-          sender: sender,
-          text: text
+    function handleKeyDown(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        handleSend();
+      }
+    }
+
+    function handleImageAttach(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          attachedImageBase64 = e.target.result;
+          document.getElementById('attached-img-tag').src = attachedImageBase64;
+          document.getElementById('image-attachment-preview').classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function clearAttachedImage() {
+      attachedImageBase64 = null;
+      document.getElementById('image-attachment-preview').classList.add('hidden');
+      const fileInput = document.getElementById('file-input');
+      if (fileInput) fileInput.value = '';
+    }
+
+    function speakVoiceResponse(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    async function handleSendFromVoice(promptText) {
+      const userKey = localStorage.getItem('lai_user_api_key') || "";
+      try {
+        setOrbState(true);
+        const reply = await callGeminiAPI(promptText, null, activePersona, selectedModel, userKey);
+        
+        document.getElementById('voice-status-text').textContent = "LAI Speaking...";
+        document.getElementById('voice-transcript-output').textContent = reply;
+
+        // Also add to chat stream
+        appendMessageToDOM(promptText, 'user');
+        addMessageToHistory(promptText, 'user');
+        appendMessageToDOM(reply, 'lai');
+        addMessageToHistory(reply, 'lai');
+
+        speakVoiceResponse(reply);
+      } catch (err) {
+        console.error("API Call Error:", err);
+        document.getElementById('voice-status-text').textContent = "Error occurred";
+        document.getElementById('voice-transcript-output').textContent = "🌋 Volcanic connection error.";
+      } finally {
+        setOrbState(false);
+      }
+    }
+
+  const GEMINI_MODELS = [
+    'gemini-3.5-flash',
+    'gemini-3-flash-preview',
+    'gemini-3.1-flash-lite',
+    'gemini-2.5-flash'
+  ];
+
+  async function callGeminiAPI(promptText, imageBase64, personaKey, modelName, apiKey) {
+    const systemPrompt = PERSONA_PROMPTS[personaKey] || PERSONA_PROMPTS.volcano;
+
+    const contents = [];
+    const userPart = [];
+
+    if (promptText) {
+      userPart.push({ text: promptText });
+    }
+
+    if (imageBase64) {
+      const mimeType = imageBase64.substring(imageBase64.indexOf(":") + 1, imageBase64.indexOf(";"));
+      const base64Data = imageBase64.split(",")[1];
+      userPart.push({
+        inlineData: {
+          mimeType: mimeType,
+          data: base64Data
+        }
+      });
+    }
+
+    contents.push({ parts: userPart });
+
+    const payload = {
+      contents: contents,
+      systemInstruction: { parts: [{ text: systemPrompt }] }
+    };
+
+    // Determine model execution queue starting with preferred model
+    let startIndex = GEMINI_MODELS.indexOf(modelName);
+    if (startIndex === -1) startIndex = 0;
+
+    const modelQueue = [
+      ...GEMINI_MODELS.slice(startIndex),
+      ...GEMINI_MODELS.slice(0, startIndex)
+    ];
+
+    let lastError = null;
+
+    for (const currentModel of modelQueue) {
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${currentModel}:generateContent?key=${apiKey}`;
+
+      try {
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
         });
-        saveHistory();
+
+        if (!response.ok) {
+          throw new Error(`Model ${currentModel} returned HTTP ${response.status}`);
+        }
+
+        const result = await response.json();
+        const replyText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        if (!replyText) {
+          throw new Error(`Model ${currentModel} provided empty response`);
+        }
+
+        // If fallback occurred, update selectedModel so it stays on the working version
+        if (selectedModel !== currentModel) {
+          console.log(`Auto-switched model from ${selectedModel} to working model: ${currentModel}`);
+          selectedModel = currentModel;
+          const selectDropdown = document.getElementById('gemini-version-select');
+          if (selectDropdown) selectDropdown.value = currentModel;
+        }
+
+        return replyText;
+      } catch (err) {
+        console.warn(`Gemini model attempt (${currentModel}) failed:`, err);
+        lastError = err;
+        // Continue loop to try next model in sequence
       }
     }
 
-    // Reload the frame contents
-    function reloadSandbox() {
-      const frame = document.getElementById('sandbox-frame');
-      if (lastGeneratedCode) {
-        frame.srcdoc = lastGeneratedCode;
-      } else {
-        frame.srcdoc = `
-          <div style="font-family: 'Plus Jakarta Sans', sans-serif; text-align: center; padding-top: 100px; color: #4a2f24; background: #0d0806; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 0;">
-            <div style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #ff4400, #ffaa00); margin-bottom: 20px; box-shadow: 0 0 15px #ff4400; opacity: 0.6;"></div>
-            <h3 style="color: #ebdcd5; margin: 0 0 8px 0; font-size: 1.25rem;">Waiting for instructions...</h3>
-            <p style="color: #a69288; font-size: 0.875rem; margin: 0; max-width: 250px;">Describe the app you'd like to build on the left and click "Erupt"!</p>
-          </div>
-        `;
-      }
-    }
+    throw lastError || new Error("All available Gemini models failed to generate a response.");
+  }
 
-    // Render directly to display
-    function appendMessageToDOM(text, sender, id) {
+  function appendMessageToDOM(text, sender, id, imageUrl) {
       const stream = document.getElementById('chat-stream');
-      const bubble = document.createElement('div');
-      if (id) bubble.id = id;
+      const container = document.createElement('div');
+      if (id) container.id = id;
 
       if (sender === 'user') {
-        bubble.className = "max-w-[85%] self-end bg-[#2d1b14] border-r-4 border-[#ff6a00] rounded-l-xl rounded-tb-xl p-4 shadow-md text-[#ebdcd5]";
-        bubble.textContent = text;
+        container.className = "max-w-[85%] self-end bg-[#281711] border-r-4 border-[#ff6a00] rounded-l-2xl rounded-tr-2xl p-4 shadow-md text-[#f7ede8]";
+        let contentHTML = `<div>${escapeHTML(text)}</div>`;
+        if (imageUrl) {
+          contentHTML = `<img src="${imageUrl}" class="w-48 h-auto rounded-lg mb-2 border border-[#3d2319]" />` + contentHTML;
+        }
+        container.innerHTML = contentHTML;
       } else {
-        bubble.className = "max-w-[85%] self-start bg-[#160f0d] border-l-4 border-[#ff4400] rounded-r-xl rounded-bl-xl p-4 shadow-md text-[#ebdcd5]";
-        bubble.innerHTML = parseMarkdown(text);
+        container.className = "max-w-[90%] md:max-w-[85%] self-start bg-[#160d09] border-l-4 border-[#ff4400] rounded-r-2xl rounded-bl-2xl p-4 shadow-md text-[#f7ede8] relative group";
+        const parsedText = parseMarkdown(text);
+        const speechBtn = `<button onclick="speakText(this)" class="absolute top-2 right-2 text-xs bg-[#241510] hover:bg-[#3d2319] text-[#8a7368] hover:text-white px-2 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-all">🔊 Listen</button>`;
+        container.innerHTML = parsedText + speechBtn;
       }
 
-      stream.appendChild(bubble);
+      stream.appendChild(container);
       stream.scrollTop = stream.scrollHeight;
     }
 
-    // Append dynamic indicator to structural DOM
     function appendThinkingPlaceholder() {
       const stream = document.getElementById('chat-stream');
-      const bubble = document.createElement('div');
-      const uniqueId = "thinking-" + Date.now();
-      bubble.id = uniqueId;
-      bubble.className = "max-w-[85%] self-start bg-[#160f0d] border-l-4 border-[#ff4400] rounded-r-xl rounded-bl-xl p-4 shadow-md text-[#ebdcd5] flex items-center gap-3";
-      
-      bubble.innerHTML = `
-        <svg viewBox="0 0 100 100" class="w-8 h-8 flex-shrink-0">
-          <polygon points="20,80 50,35 80,80" fill="#ff4400" class="anim-rumble" />
-          <ellipse cx="50" cy="36" rx="8" ry="3" fill="#ffaa00" />
-          <circle cx="50" cy="30" r="3" fill="#55443d" class="anim-smoke" />
-        </svg>
-        <span class="text-sm italic text-[#a69288] animate-pulse label-text">Magma core processing...</span>
-      `;
-
-      stream.appendChild(bubble);
+      const id = "think_" + Date.now();
+      const div = document.createElement('div');
+      div.id = id;
+      div.className = "max-w-[85%] self-start bg-[#160d09] border-l-4 border-[#ff4400] rounded-r-2xl rounded-bl-2xl p-4 shadow-md text-[#8a7368] italic flex items-center gap-2";
+      div.innerHTML = `<span class="animate-spin text-[#ff4400]">🌋</span> <span>Erupting response...</span>`;
+      stream.appendChild(div);
       stream.scrollTop = stream.scrollHeight;
-      return uniqueId;
-    }
-
-    function updateThinkingPlaceholder(id, customText) {
-      const bubble = document.getElementById(id);
-      if (bubble) {
-        const label = bubble.querySelector('.label-text');
-        if (label) {
-          label.textContent = customText;
-        }
-      }
+      return id;
     }
 
     function replaceThinkingPlaceholder(id, newText) {
-      const bubble = document.getElementById(id);
-      if (bubble) {
-        bubble.className = "max-w-[85%] self-start bg-[#160f0d] border-l-4 border-[#ff4400] rounded-r-xl rounded-bl-xl p-4 shadow-md text-[#ebdcd5]";
-        bubble.innerHTML = parseMarkdown(newText);
+      const elem = document.getElementById(id);
+      if (elem) {
+        elem.className = "max-w-[90%] md:max-w-[85%] self-start bg-[#160d09] border-l-4 border-[#ff4400] rounded-r-2xl rounded-bl-2xl p-4 shadow-md text-[#f7ede8] relative group";
+        const parsedText = parseMarkdown(newText);
+        const speechBtn = `<button onclick="speakText(this)" class="absolute top-2 right-2 text-xs bg-[#241510] hover:bg-[#3d2319] text-[#8a7368] hover:text-white px-2 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-all">🔊 Listen</button>`;
+        elem.innerHTML = parsedText + speechBtn;
         const stream = document.getElementById('chat-stream');
         stream.scrollTop = stream.scrollHeight;
       }
     }
 
-    function appendSystemNotification(text) {
-      appendMessageToDOM(text, 'lai');
+    function addMessageToHistory(text, sender, imageUrl) {
+      const session = chatHistory.find(c => c.id === activeChatId);
+      if (session) {
+        session.messages.push({
+          id: "msg_" + Date.now(),
+          sender: sender,
+          text: text,
+          imageUrl: imageUrl || null
+        });
+        saveHistoryToStorage();
+      }
     }
 
-    function parseMarkdown(text) {
-      return text
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/\*\*([\s\S]*?)\*\*/g, '<strong>$1</strong>')
-        .replace(/`([^`]+)`/g, '<code class="bg-[#241510] text-[#ffaa00] px-1.5 py-0.5 rounded font-mono text-sm">$1</code>')
-        .replace(/```html([\s\S]*?)```/gi, '<pre class="bg-black text-[#50fa7b] p-4 rounded-lg my-2 overflow-x-auto border border-[#2d1b14] font-mono text-xs"><code>$1</code></pre>')
-        .replace(/```javascript([\s\S]*?)```/gi, '<pre class="bg-black text-[#8be9fd] p-4 rounded-lg my-2 overflow-x-auto border border-[#2d1b14] font-mono text-xs"><code>$1</code></pre>')
-        .replace(/```css([\s\S]*?)```/gi, '<pre class="bg-black text-[#ff79c6] p-4 rounded-lg my-2 overflow-x-auto border border-[#2d1b14] font-mono text-xs"><code>$1</code></pre>')
-        .replace(/```([\s\S]*?)```/g, '<pre class="bg-black text-[#f8f8f2] p-4 rounded-lg my-2 overflow-x-auto border border-[#2d1b14] font-mono text-xs"><code>$1</code></pre>')
-        .replace(/\n/g, '<br>');
+    function escapeHTML(str) {
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
 
-    // Initialize sandbox and storage systems on start
-    window.onload = () => {
-      initHistory();
-    };
+    function parseMarkdown(str) {
+      let src = str;
+      src = src.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" class="w-full max-w-md h-auto rounded-xl my-2 border border-[#3d2319] shadow-lg" />');
+      src = src.replace(/```([a-z]*)\n([\s\S]*?)```/gi, function(match, lang, code) {
+        const safeCode = escapeHTML(code.trim());
+        return `<div class="my-3 bg-[#0b0705] rounded-xl border border-[#2d1b14] overflow-hidden">
+                  <div class="bg-[#1c120e] px-3 py-1.5 flex justify-between items-center text-[11px] text-[#8a7368] font-mono border-b border-[#2d1b14]">
+                    <span>${lang || 'code'}</span>
+                    <button onclick="copyToClipboard(this)" class="hover:text-white transition-colors">Copy</button>
+                  </div>
+                  <pre class="p-3 text-xs text-[#50fa7b] font-mono overflow-x-auto"><code>${safeCode}</code></pre>
+                </div>`;
+      });
+      src = src.replace(/`([^`]+)`/g, '<code class="bg-[#281711] text-[#ffaa00] px-1.5 py-0.5 rounded font-mono text-xs">$1</code>');
+      src = src.replace(/\*\*([\s\S]*?)\*\*/g, '<strong>$1</strong>');
+      src = src.replace(/\n/g, '<br>');
+      return src;
+    }
+
+    function copyToClipboard(btn) {
+      const code = btn.parentElement.nextElementSibling.innerText;
+      const el = document.createElement('textarea');
+      el.value = code;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+
+      const orig = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = orig, 2000);
+    }
+
+    function speakText(btn) {
+      const parent = btn.parentElement;
+      const text = parent.innerText.replace('🔊 Listen', '').trim();
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function previewCodeInSandbox(code) {
+      toggleCodeInspector(true);
+      const frame = document.getElementById('sandbox-iframe');
+      frame.srcdoc = code;
+    }
+
+    function toggleCodeInspector(show) {
+      const panel = document.getElementById('code-inspector');
+      if (show) panel.classList.remove('hidden');
+      else panel.classList.add('hidden');
+    }
+
+    window.onload = initApp;
   </script>
 </body>
 </html>
